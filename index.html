@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemistry - pH Calculator</title>
+    <style>
+        /* ផ្នែករចនា (CSS) ដើម្បីឱ្យ Website មានសម្រស់ស្អាត ឬ "Bloom" */
+        body {
+            font-family: 'Khmer MN', 'Thonburi', sans-serif;
+            background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            width: 380px;
+            text-align: center;
+        }
+        h2 { color: #333; margin-bottom: 20px; }
+        select, input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 2px solid #eee;
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        button {
+            background: #4e54c8;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 18px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        button:hover { background: #8f94fb; }
+        #resultBox {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none; /* លាក់ទុកសិន ចាំបង្ហាញពេលចុចប៊ូតុង */
+        }
+        .acid { background: #ffcccc; color: #cc0000; }
+        .base { background: #ccccff; color: #0000cc; }
+        .neutral { background: #e2e2e2; color: #333; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>គណនា pH គីមី</h2>
+        
+        <label>ជ្រើសរើសប្រភេទកំហាប់៖</label>
+        <select id="type">
+            <option value="h3o">កំហាប់ [H₃O⁺]</option>
+            <option value="oh">កំហាប់ [OH⁻]</option>
+        </select>
+
+        <input type="number" id="concentration" placeholder="ឧទាហរណ៍: 0.001 ឬ 1e-4" step="any">
+        
+        <button onclick="calculatePH()">គណនាឥឡូវនេះ</button>
+
+        <div id="resultBox">
+            <div id="phResult" style="font-size: 24px; font-weight: bold;"></div>
+            <div id="typeText"></div>
+        </div>
+    </div>
+
+    <script>
+        // ផ្នែកបញ្ជា (JavaScript)
+        function calculatePH() {
+            const type = document.getElementById('type').value;
+            const conc = parseFloat(document.getElementById('concentration').value);
+            const resultBox = document.getElementById('resultBox');
+            const phResult = document.getElementById('phResult');
+            const typeText = document.getElementById('typeText');
+
+            if (isNaN(conc) || conc <= 0) {
+                alert("សូមបញ្ចូលតម្លៃកំហាប់ឱ្យបានត្រឹមត្រូវ!");
+                return;
+            }
+
+            let ph;
+            if (type === 'h3o') {
+                ph = -Math.log10(conc);
+            } else {
+                let poh = -Math.log10(conc);
+                ph = 14 - poh;
+            }
+
+            // បង្ហាញលទ្ធផល
+            resultBox.style.display = "block";
+            phResult.innerHTML = "pH = " + ph.toFixed(2);
+
+            // កំណត់ពណ៌តាមកម្រិត pH
+            if (ph < 7) {
+                resultBox.className = "acid";
+                typeText.innerHTML = "សូលុយស្យុងនេះជា៖ <b>អាស៊ីត</b>";
+            } else if (ph > 7) {
+                resultBox.className = "base";
+                typeText.innerHTML = "សូលុយស្យុងនេះជា៖ <b>បាស</b>";
+            } else {
+                resultBox.className = "neutral";
+                typeText.innerHTML = "សូលុយស្យុងនេះជា៖ <b>ណឺត</b>";
+            }
+        }
+    </script>
+
+</body>
+</html>
