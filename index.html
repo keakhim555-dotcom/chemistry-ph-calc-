@@ -3,121 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chemistry - pH Calculator</title>
+    <title>PH Calculator - Pro Edition</title>
     <style>
-        /* ផ្នែករចនា (CSS) ដើម្បីឱ្យ Website មានសម្រស់ស្អាត ឬ "Bloom" */
+        @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;700&display=swap');
+
+        :root {
+            --primary: #4f46e5;
+            --acid-color: #ef4444;
+            --base-color: #10b981;
+            --neutral-color: #3b82f6;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
         body {
-            font-family: 'Khmer MN', 'Thonburi', sans-serif;
-            background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
-            height: 100vh;
+            font-family: 'Kantumruy Pro', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0;
+            padding: 20px;
+            color: #1f2937;
         }
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            width: 380px;
+
+        .main-wrapper {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        h2 {
             text-align: center;
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
-        h2 { color: #333; margin-bottom: 20px; }
+
+        .input-group { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; color: #4b5563; }
+
         select, input {
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 10px;
-            border: 2px solid #eee;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
             font-size: 16px;
-            box-sizing: border-box;
+            transition: all 0.3s;
             outline: none;
         }
+
+        select:focus, input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
+
         button {
-            background: #4e54c8;
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
             color: white;
             border: none;
-            padding: 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 18px;
+            border-radius: 12px;
+            font-size: 16px;
             font-weight: bold;
-            transition: 0.3s;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
         }
-        button:hover { background: #8f94fb; }
-        #resultBox {
+
+        button:hover { background: #4338ca; transform: translateY(-2px); }
+        button:active { transform: translateY(0); }
+
+        #result-display {
             margin-top: 25px;
-            padding: 15px;
-            border-radius: 10px;
-            display: none; /* លាក់ទុកសិន ចាំបង្ហាញពេលចុចប៊ូតុង */
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            display: none;
+            animation: slideUp 0.4s ease;
         }
-        .acid { background: #ffcccc; color: #cc0000; }
-        .base { background: #ccccff; color: #0000cc; }
-        .neutral { background: #e2e2e2; color: #333; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .ph-number { font-size: 42px; font-weight: 800; margin: 0; }
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; background: rgba(255,255,255,0.3); font-weight: 600; margin-top: 5px; }
+
+        .history-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; font-size: 12px; color: #6b7280; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        td { padding: 12px 0; border-bottom: 1px solid #f3f4f6; font-size: 14px; }
+
+        .btn-clear { background: transparent; color: #ef4444; font-size: 13px; text-decoration: underline; border: none; cursor: pointer; padding: 0; width: auto; margin-top: 10px;}
+        
+        .acid-bg { background: var(--acid-color); color: white; }
+        .base-bg { background: var(--base-color); color: white; }
+        .neutral-bg { background: var(--neutral-color); color: white; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>គណនា pH គីមី</h2>
+<div class="main-wrapper">
+    <div class="card">
+        <h2>🧪 គណនា pH នៃសូលុយស្យុង</h2>
         
-        <label>ជ្រើសរើសប្រភេទកំហាប់៖</label>
-        <select id="type">
-            <option value="h3o">កំហាប់ [H₃O⁺]</option>
-            <option value="oh">កំហាប់ [OH⁻]</option>
-        </select>
+        <div class="input-group">
+            <label>ប្រភេទសូលុយស្យុង</label>
+            <select id="calcType">
+                <option value="h3o">កំហាប់ [H₃O⁺]</option>
+                <option value="oh">កំហាប់ [OH⁻]</option>
+                <option value="mono_acid">ម៉ូណូអាស៊ីតខ្លាំង (Cₐ)</option>
+                <option value="di_acid">ឌីអាស៊ីតខ្លាំង (Cₐ)</option>
+                <option value="mono_base">ម៉ូណូបាសខ្លាំង (Cb)</option>
+                <option value="di_base">ឌីបាសខ្លាំង (Cb)</option>
+            </select>
+        </div>
 
-        <input type="number" id="concentration" placeholder="ឧទាហរណ៍: 0.001 ឬ 1e-4" step="any">
-        
-        <button onclick="calculatePH()">គណនាឥឡូវនេះ</button>
+        <div class="input-group">
+            <label>កំហាប់ម៉ូលេគុល (mol/L)</label>
+            <input type="number" id="inputVal" step="any" placeholder="បញ្ចូលតម្លៃលេខ...">
+        </div>
 
-        <div id="resultBox">
-            <div id="phResult" style="font-size: 24px; font-weight: bold;"></div>
-            <div id="typeText"></div>
+        <button onclick="processCalculation()">គណនាឥឡូវនេះ</button>
+
+        <div id="result-display">
+            <p id="resStatusText" style="margin:0; font-size: 14px; opacity: 0.9;">សូលុយស្យុងគឺ</p>
+            <h1 class="ph-number" id="resPH">7.00</h1>
+            <div class="status-badge" id="resBadge">Neutral</div>
         </div>
     </div>
 
-    <script>
-        // ផ្នែកបញ្ជា (JavaScript)
-        function calculatePH() {
-            const type = document.getElementById('type').value;
-            const conc = parseFloat(document.getElementById('concentration').value);
-            const resultBox = document.getElementById('resultBox');
-            const phResult = document.getElementById('phResult');
-            const typeText = document.getElementById('typeText');
+    <div class="history-card">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin:0; font-size: 16px;">📜 ប្រវត្តិគណនា</h3>
+            <button class="btn-clear" onclick="clearHistory()">លុបទាំងអស់</button>
+        </div>
+        <table id="historyTable">
+            <thead>
+                <tr>
+                    <th>ប្រភេទ</th>
+                    <th>តម្លៃ pH</th>
+                    <th>លទ្ធផល</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
 
-            if (isNaN(conc) || conc <= 0) {
-                alert("សូមបញ្ចូលតម្លៃកំហាប់ឱ្យបានត្រឹមត្រូវ!");
-                return;
-            }
+<script>
+    // បង្ហាញទិន្នន័យចាស់ពេលបើកកម្មវិធី
+    window.onload = loadHistory;
 
-            let ph;
-            if (type === 'h3o') {
-                ph = -Math.log10(conc);
-            } else {
-                let poh = -Math.log10(conc);
-                ph = 14 - poh;
-            }
-
-            // បង្ហាញលទ្ធផល
-            resultBox.style.display = "block";
-            phResult.innerHTML = "pH = " + ph.toFixed(2);
-
-            // កំណត់ពណ៌តាមកម្រិត pH
-            if (ph < 7) {
-                resultBox.className = "acid";
-                typeText.innerHTML = "សូលុយស្យុងនេះជា៖ <b>អាស៊ីត</b>";
-            } else if (ph > 7) {
-                resultBox.className = "base";
-                typeText.innerHTML = "សូលុយស្យុងនេះជា៖ <b>បាស</b>";
-            } else {
-                resultBox.className = "neutral";
-                typeText.innerHTML = "សូលុយស្យុងនេះជា៖ <b>ណឺត</b>";
-            }
+    function processCalculation() {
+        const type = document.getElementById('calcType').value;
+        const typeLabel = document.getElementById('calcType').options[document.getElementById('calcType').selectedIndex].text;
+        const val = parseFloat(document.getElementById('inputVal').value);
+        
+        if (isNaN(val) || val <= 0) {
+            alert("សូមបញ្ចូលកំហាប់ឱ្យបានត្រឹមត្រូវ!");
+            return;
         }
-    </script>
+
+        let ph = 0;
+        if(type === 'h3o' || type === 'mono_acid') ph = -Math.log10(val);
+        else if(type === 'di_acid') ph = -Math.log10(2 * val);
+        else if(type === 'oh' || type === 'mono_base') ph = 14 + Math.log10(val);
+        else if(type === 'di_base') ph = 14 + Math.log10(2 * val);
+
+        const finalPH = ph.toFixed(2);
+        displayResult(finalPH);
+        saveToHistory(typeLabel, finalPH);
+    }
+
+    function displayResult(ph) {
+        const display = document.getElementById('result-display');
+        const phTxt = document.getElementById('resPH');
+        const badge = document.getElementById('resBadge');
+        
+        display.style.display = 'block';
+        phTxt.innerText = ph;
+
+        display.className = ''; 
+        if(ph < 6.5) {
+            display.classList.add('acid-bg');
+            badge.innerText = "អាស៊ីត (Acid)";
+        } else if(ph > 7.5) {
+            display.classList.add('base-bg');
+            badge.innerText = "បាស (Base)";
+        } else {
+            display.classList.add('neutral-bg');
+            badge.innerText = "ណឺត (Neutral)";
+        }
+    }
+
+    function saveToHistory(type, ph) {
+        let status = ph < 6.5 ? "អាស៊ីត" : (ph > 7.5 ? "បាស" : "ណឺត");
+        let history = JSON.parse(localStorage.getItem('phHistory') || '[]');
+        history.unshift({ type, ph, status });
+        localStorage.setItem('phHistory', JSON.stringify(history.slice(0, 10))); // រក្សាទុកតែ ១០ ចុងក្រោយ
+        renderHistory();
+    }
+
+    function loadHistory() {
+        renderHistory();
+    }
+
+    function renderHistory() {
+        const history = JSON.parse(localStorage.getItem('phHistory') || '[]');
+        const tbody = document.querySelector('#historyTable tbody');
+        tbody.innerHTML = history.map(item => `
+            <tr>
+                <td>${item.type}</td>
+                <td><b>${item.ph}</b></td>
+                <td>${item.status}</td>
+            </tr>
+        `).join('');
+    }
+
+    function clearHistory() {
+        if(confirm("លុបប្រវត្តិទាំងអស់?")) {
+            localStorage.removeItem('phHistory');
+            renderHistory();
+        }
+    }
+</script>
 
 </body>
 </html>
