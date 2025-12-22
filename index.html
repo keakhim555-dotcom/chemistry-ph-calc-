@@ -27,10 +27,7 @@
             color: #1f2937;
         }
 
-        .main-wrapper {
-            width: 100%;
-            max-width: 600px;
-        }
+        .main-wrapper { width: 100%; max-width: 800px; }
 
         .card {
             background: rgba(255, 255, 255, 0.95);
@@ -41,76 +38,53 @@
             margin-bottom: 20px;
         }
 
-        h2 {
-            text-align: center;
-            margin-top: 0;
-            color: var(--primary);
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
+        h2 { text-align: center; margin-top: 0; color: var(--primary); font-size: 22px; }
 
         .input-group { margin-bottom: 18px; }
         label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; color: #4b5563; }
 
         select, input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: all 0.3s;
-            outline: none;
+            width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb;
+            border-radius: 12px; font-size: 15px; outline: none; box-sizing: border-box;
         }
 
-        select:focus, input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
+        .mixture-inputs {
+            display: none; grid-template-columns: 1fr 1fr; gap: 15px;
+            background: #f9fafb; padding: 15px; border-radius: 15px; margin-bottom: 15px;
+        }
 
         button {
-            width: 100%;
-            padding: 14px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s, background 0.3s;
+            width: 100%; padding: 14px; background: var(--primary); color: white;
+            border: none; border-radius: 12px; font-size: 16px; font-weight: bold;
+            cursor: pointer; transition: 0.2s;
         }
-
-        button:hover { background: #4338ca; transform: translateY(-2px); }
-        button:active { transform: translateY(0); }
 
         #result-display {
-            margin-top: 25px;
-            padding: 20px;
-            border-radius: 16px;
-            text-align: center;
-            display: none;
-            animation: slideUp 0.4s ease;
+            margin-top: 25px; padding: 20px; border-radius: 16px;
+            text-align: center; display: none;
         }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .details-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;
+            background: rgba(255,255,255,0.3); padding: 10px; border-radius: 10px;
+        }
 
-        .ph-number { font-size: 42px; font-weight: 800; margin: 0; }
-        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; background: rgba(255,255,255,0.3); font-weight: 600; margin-top: 5px; }
+        /* កែពណ៌អក្សរឱ្យខ្មៅក្នុងប្រអប់នេះ */
+        .equivalence-box {
+            margin-top: 15px; padding: 12px; border: 1px dashed #333;
+            border-radius: 10px; font-size: 14px; 
+            background: #fffbeb; color: #000000; /* ពណ៌ខ្មៅដាច់ខាត */
+        }
 
         .history-card {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 20px;
-            max-height: 300px;
-            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.9); padding: 20px;
+            border-radius: 20px; max-height: 400px; overflow-y: auto;
         }
 
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; font-size: 12px; color: #6b7280; padding-bottom: 10px; border-bottom: 1px solid #eee; }
-        td { padding: 12px 0; border-bottom: 1px solid #f3f4f6; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; min-width: 500px; }
+        th { text-align: left; font-size: 12px; color: #6b7280; padding: 10px; border-bottom: 1px solid #eee; }
+        td { padding: 10px; border-bottom: 1px solid #f3f4f6; font-size: 12px; }
 
-        .btn-clear { background: transparent; color: #ef4444; font-size: 13px; text-decoration: underline; border: none; cursor: pointer; padding: 0; width: auto; margin-top: 10px;}
-        
         .acid-bg { background: var(--acid-color); color: white; }
         .base-bg { background: var(--base-color); color: white; }
         .neutral-bg { background: var(--neutral-color); color: white; }
@@ -120,129 +94,203 @@
 
 <div class="main-wrapper">
     <div class="card">
-        <h2>🧪 គណនា pH នៃសូលុយស្យុង</h2>
+        <h2>🧪 គណនា  pH និង pH ល្បាយក្រោយប្រតិកម្ម</h2>
         
         <div class="input-group">
-            <label>ប្រភេទសូលុយស្យុង</label>
-            <select id="calcType">
-                <option value="h3o">កំហាប់ [H₃O⁺]</option>
-                <option value="oh">កំហាប់ [OH⁻]</option>
-                <option value="mono_acid">ម៉ូណូអាស៊ីតខ្លាំង (Cₐ)</option>
+            <label>ប្រភេទការគណនា</label>
+            <select id="calcType" onchange="toggleInputs()">
+                <option value="h3o">ម៉ូណូអាស៊ីតខ្លាំង (Cₐ)</option>
+                <option value="oh">ម៉ូណូបាសខ្លាំង (Cb)</option>
                 <option value="di_acid">ឌីអាស៊ីតខ្លាំង (Cₐ)</option>
-                <option value="mono_base">ម៉ូណូបាសខ្លាំង (Cb)</option>
                 <option value="di_base">ឌីបាសខ្លាំង (Cb)</option>
+                <option disabled>──────────</option>
+                <option value="mix_m_m">អត្រាកម្មរវាង ៖ ម៉ូណូអាស៊ីតខ្លាំង + ម៉ូណូបាសខ្លាំង</option>
+                <option value="mix_d_m">អត្រាកម្មរវាង ៖ ឌីអាស៊ីតខ្លាំង + ម៉ូណូបាសខ្លាំង</option>
+                <option value="mix_m_d">អត្រាកម្មរវាង  ៖ ម៉ូណូអាស៊ីតខ្លាំង + ឌីបាសខ្លាំង</option>
             </select>
         </div>
 
-        <div class="input-group">
-            <label>កំហាប់ម៉ូលេគុល (mol/L)</label>
-            <input type="number" id="inputVal" step="any" placeholder="បញ្ចូលតម្លៃលេខ...">
+        <div id="singleInputGroup" class="input-group">
+            <label id="inputLabel">កំហាប់ជាម៉ូលេ (mol/L)</label>
+            <input type="number" id="inputVal" step="any" placeholder="ឧទាហរណ៍៖ 0.01">
+        </div>
+
+        <div id="mixtureInputs" class="mixture-inputs">
+            <div><label>កំហាប់អាស៊ីត (mol/L)</label><input type="number" id="ca" step="any"></div>
+            <div><label> មាឌអាស៊ីត (mL)</label><input type="number" id="va" step="any"></div>
+            <div><label>កំហាប់បាស (mol/L)</label><input type="number" id="cb" step="any"></div>
+            <div><label>មាឌបាស (mL)</label><input type="number" id="vb" step="any"></div>
         </div>
 
         <button onclick="processCalculation()">គណនាឥឡូវនេះ</button>
 
         <div id="result-display">
-            <p id="resStatusText" style="margin:0; font-size: 14px; opacity: 0.9;">សូលុយស្យុងគឺ</p>
-            <h1 class="ph-number" id="resPH">7.00</h1>
-            <div class="status-badge" id="resBadge">Neutral</div>
+            <p id="resStatusText" style="margin:0;"> pH នៃសូលុយស្យុងគឺ</p>
+            <h1 id="resPH" style="font-size: 40px; margin: 5px 0;">7.00</h1>
+            <div id="resBadge" style="display:inline-block; padding: 5px 15px; border-radius: 20px; background: rgba(0,0,0,0.1);">Neutral</div>
+            
+            <div class="details-grid">
+                <div>[H₃O⁺]: <span id="resH3O"></span></div>
+                <div>[OH⁻]: <span id="resOH"></span></div>
+                <div>pH: <span id="resPH2"></span></div>
+                <div>pOH: <span id="resPOH"></span></div>
+            </div>
+
+            <div id="equivBox" class="equivalence-box" style="display:none;"></div>
         </div>
     </div>
 
     <div class="history-card">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <h3 style="margin:0; font-size: 16px;">📜 ប្រវត្តិគណនា</h3>
-            <button class="btn-clear" onclick="clearHistory()">លុបទាំងអស់</button>
+            <button style="width:auto; padding: 5px 10px; background: #ef4444; font-size: 12px;" onclick="clearHistory()">លុបប្រវត្តិ</button>
         </div>
-        <table id="historyTable">
-            <thead>
-                <tr>
-                    <th>ប្រភេទ</th>
-                    <th>តម្លៃ pH</th>
-                    <th>លទ្ធផល</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+        <div style="overflow-x: auto;">
+            <table id="historyTable">
+                <thead>
+                    <tr>
+                        <th>ប្រភេទ</th>
+                        <th>pH</th>
+                        <th>pOH</th>
+                        <th>[H₃O⁺]</th>
+                        <th>[OH⁻]</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <script>
-    // បង្ហាញទិន្នន័យចាស់ពេលបើកកម្មវិធី
-    window.onload = loadHistory;
+    window.onload = renderHistory;
+
+    // មុខងារបំប្លែងលេខ e-x ទៅជាស្វ័យគុណ HTML
+    function formatSci(num) {
+        let str = num.toExponential(2);
+        let parts = str.split('e');
+        if (parts.length === 2) {
+            let exp = parseInt(parts[1]);
+            return `${parts[0]} × 10<sup>${exp}</sup>`;
+        }
+        return str;
+    }
+
+    function toggleInputs() {
+        const type = document.getElementById('calcType').value;
+        document.getElementById('singleInputGroup').style.display = type.startsWith('mix') ? 'none' : 'block';
+        document.getElementById('mixtureInputs').style.display = type.startsWith('mix') ? 'grid' : 'none';
+    }
 
     function processCalculation() {
         const type = document.getElementById('calcType').value;
         const typeLabel = document.getElementById('calcType').options[document.getElementById('calcType').selectedIndex].text;
-        const val = parseFloat(document.getElementById('inputVal').value);
-        
-        if (isNaN(val) || val <= 0) {
-            alert("សូមបញ្ចូលកំហាប់ឱ្យបានត្រឹមត្រូវ!");
-            return;
-        }
+        let ph, h3o, oh, poh;
+        let equivMsg = "";
 
-        let ph = 0;
-        if(type === 'h3o' || type === 'mono_acid') ph = -Math.log10(val);
-        else if(type === 'di_acid') ph = -Math.log10(2 * val);
-        else if(type === 'oh' || type === 'mono_base') ph = 14 + Math.log10(val);
-        else if(type === 'di_base') ph = 14 + Math.log10(2 * val);
+        if (type.startsWith('mix')) {
+            const Ca = parseFloat(document.getElementById('ca').value);
+            const Va = parseFloat(document.getElementById('va').value);
+            const Cb = parseFloat(document.getElementById('cb').value);
+            const Vb = parseFloat(document.getElementById('vb').value);
 
-        const finalPH = ph.toFixed(2);
-        displayResult(finalPH);
-        saveToHistory(typeLabel, finalPH);
-    }
+            if ([Ca, Va, Cb, Vb].some(isNaN)) { alert("សូមបញ្ចូលលេខឱ្យគ្រប់!"); return; }
 
-    function displayResult(ph) {
-        const display = document.getElementById('result-display');
-        const phTxt = document.getElementById('resPH');
-        const badge = document.getElementById('resBadge');
-        
-        display.style.display = 'block';
-        phTxt.innerText = ph;
+            let na_fact = (type === 'mix_d_m') ? 2 : 1;
+            let nb_fact = (type === 'mix_m_d') ? 2 : 1;
 
-        display.className = ''; 
-        if(ph < 6.5) {
-            display.classList.add('acid-bg');
-            badge.innerText = "អាស៊ីត (Acid)";
-        } else if(ph > 7.5) {
-            display.classList.add('base-bg');
-            badge.innerText = "បាស (Base)";
+            let nH = na_fact * Ca * (Va/1000);
+            let nOH = nb_fact * Cb * (Vb/1000);
+            let Vtotal = (Va + Vb) / 1000;
+
+            if (nH > nOH) {
+                h3o = (nH - nOH) / Vtotal;
+                ph = -Math.log10(h3o);
+                let reqVb = (nH / (nb_fact * Cb)) * 1000;
+                equivMsg = `ត្រូវបន្ថែមបាស <b>${(reqVb - Vb).toFixed(2)} mL</b> ដើម្បីឱ្យសូលុយស្យុងមាន pH=7 ។ `;
+            } else if (nOH > nH) {
+                oh = (nOH - nH) / Vtotal;
+                ph = 14 + Math.log10(oh);
+                let reqVa = (nOH / (na_fact * Ca)) * 1000;
+                equivMsg = `ត្រូវបន្ថែមអាស៊ីត <b>${(reqVa - Va).toFixed(2)} mL</b> ដើម្បីឱ្យល្បាយសូលុយស្យុងមាន pH=7 ។ `;
+            } else {
+                ph = 7;
+                equivMsg = "ល្បាយនេះស្ថិតក្នុងចំណុចសមមូលស្រាប់ហើយ (pH=7)";
+            }
         } else {
-            display.classList.add('neutral-bg');
-            badge.innerText = "ណឺត (Neutral)";
+            const C = parseFloat(document.getElementById('inputVal').value);
+            if (isNaN(C)) { alert("សូមបញ្ចូលកំហាប់!"); return; }
+            
+            if(type === 'h3o') h3o = C;
+            else if(type === 'di_acid') h3o = 2 * C;
+            else if(type === 'oh') oh = C;
+            else if(type === 'di_base') oh = 2 * C;
+
+            ph = h3o ? -Math.log10(h3o) : 14 + Math.log10(oh);
         }
+
+        ph = Math.max(0, Math.min(14, ph));
+        poh = 14 - ph;
+        h3o = Math.pow(10, -ph);
+        oh = Math.pow(10, -poh);
+
+        displayResult(ph, poh, h3o, oh, equivMsg);
+        saveToHistory(typeLabel, ph, poh, h3o, oh);
     }
 
-    function saveToHistory(type, ph) {
-        let status = ph < 6.5 ? "អាស៊ីត" : (ph > 7.5 ? "បាស" : "ណឺត");
-        let history = JSON.parse(localStorage.getItem('phHistory') || '[]');
-        history.unshift({ type, ph, status });
-        localStorage.setItem('phHistory', JSON.stringify(history.slice(0, 10))); // រក្សាទុកតែ ១០ ចុងក្រោយ
-        renderHistory();
+    function displayResult(ph, poh, h3o, oh, equivMsg) {
+        const display = document.getElementById('result-display');
+        document.getElementById('resPH').innerText = ph.toFixed(2);
+        document.getElementById('resPH2').innerText = ph.toFixed(2);
+        document.getElementById('resPOH').innerText = poh.toFixed(2);
+        
+        // បង្ហាញជាស្វ័យគុណ
+        document.getElementById('resH3O').innerHTML = formatSci(h3o);
+        document.getElementById('resOH').innerHTML = formatSci(oh);
+        
+        const eqBox = document.getElementById('equivBox');
+        if(equivMsg) {
+            eqBox.innerHTML = "💡 " + equivMsg;
+            eqBox.style.display = "block";
+        } else {
+            eqBox.style.display = "none";
+        }
+
+        display.style.display = 'block';
+        display.className = (ph < 6.95) ? 'acid-bg' : (ph > 7.05 ? 'base-bg' : 'neutral-bg');
+        document.getElementById('resBadge').innerText = (ph < 6.95) ? "អាស៊ីត (Acid)" : (ph > 7.05 ? "បាស (Base)" : "ណឺត (Neutral)");
     }
 
-    function loadHistory() {
+    function saveToHistory(type, ph, poh, h3o, oh) {
+        let history = JSON.parse(localStorage.getItem('phHistoryV3') || '[]');
+        history.unshift({ 
+            type, ph: ph.toFixed(2), poh: poh.toFixed(2), 
+            h3o: formatSci(h3o), oh: formatSci(oh) 
+        });
+        localStorage.setItem('phHistoryV3', JSON.stringify(history.slice(0, 10)));
         renderHistory();
     }
 
     function renderHistory() {
-        const history = JSON.parse(localStorage.getItem('phHistory') || '[]');
+        const history = JSON.parse(localStorage.getItem('phHistoryV3') || '[]');
         const tbody = document.querySelector('#historyTable tbody');
         tbody.innerHTML = history.map(item => `
             <tr>
                 <td>${item.type}</td>
                 <td><b>${item.ph}</b></td>
-                <td>${item.status}</td>
+                <td>${item.poh}</td>
+                <td>${item.h3o}</td>
+                <td>${item.oh}</td>
             </tr>
         `).join('');
     }
 
     function clearHistory() {
         if(confirm("លុបប្រវត្តិទាំងអស់?")) {
-            localStorage.removeItem('phHistory');
+            localStorage.removeItem('phHistoryV3');
             renderHistory();
         }
     }
 </script>
-
 </body>
 </html>
