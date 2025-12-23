@@ -91,7 +91,7 @@
 
 <div class="main-wrapper">
     <div class="card">
-        <h2>🧪 គណនា pH និង pH ល្បាយក្រោយប្រតិកម្ម</h2>
+        <h2>🧪 គណនា pH និង pH ល្បាយក្រោយប្រតិកម្មនៅសីណ្ហភាព 25&deg;C</p></h2>
         
         <div class="input-group">
             <label>ប្រភេទការគណនា</label>
@@ -100,8 +100,8 @@
                 <option value="oh">ម៉ូណូបាសខ្លាំង (Cb) = [OH⁻] </option>
                 <option value="di_acid">ឌីអាស៊ីតខ្លាំង (Cₐ)</option>
                 <option value="di_base">ឌីបាសខ្លាំង (Cb)</option>
-                <option value="from_ph">រក [H₃O⁺] ចេញពីតម្លៃ pH</option>
-                <option value="from_poh">រក [OH⁻] ចេញពីតម្លៃ pOH</option>
+                <option value="from_ph">រកកំហាប់ [H₃O⁺] ពីតម្លៃ pH</option>
+                <option value="from_poh">រកកំហាប់ [OH⁻] ពីតម្លៃ pOH</option>
                 <option disabled>──────────</option>
                 <option value="mix_m_m">អត្រាកម្មរវាង ៖ ម៉ូណូអាស៊ីតខ្លាំង + ម៉ូណូបាសខ្លាំង</option>
                 <option value="mix_d_m">អត្រាកម្មរវាង ៖ ឌីអាស៊ីតខ្លាំង + ម៉ូណូបាសខ្លាំង</option>
@@ -133,6 +133,9 @@
                 <div>[OH⁻]: <span id="resOH"></span></div>
                 <div>pH: <span id="resPH2"></span></div>
                 <div>pOH: <span id="resPOH"></span></div>
+            </div>
+            <div id="titration-info" style="margin-top: 15px; font-weight: bold; border-top: 1px solid rgba(255,255,255,0.5); padding-top: 10px; display: none;">
+                <span id="titrationMsg"></span>
             </div>
         </div>
     </div>
@@ -184,24 +187,33 @@
         if(type === 'from_ph') inputLabel.innerText = "បញ្ចូលតម្លៃ pH (0-14)";
         else if(type === 'from_poh') inputLabel.innerText = "បញ្ចូលតម្លៃ pOH (0-14)";
         else inputLabel.innerText = "កំហាប់ជាម៉ូលេ (mol/L)";
+
+        // Reset Titration Display
+        document.getElementById('titration-info').style.display = 'none';
     }
 
     function processCalculation() {
         const type = document.getElementById('calcType').value;
         const typeLabel = document.getElementById('calcType').options[document.getElementById('calcType').selectedIndex].text;
         let ph, h3o, oh, poh;
+        let titrationText = "";
 
         if (type.startsWith('mix')) {
             const Ca = parseFloat(document.getElementById('ca').value);
             const Va = parseFloat(document.getElementById('va').value);
             const Cb = parseFloat(document.getElementById('cb').value);
             const Vb = parseFloat(document.getElementById('vb').value);
+            
             if ([Ca, Va, Cb, Vb].some(isNaN)) { alert("សូមបញ្ចូលលេខឱ្យគ្រប់!"); return; }
+            
             let na_fact = (type === 'mix_d_m') ? 2 : 1;
             let nb_fact = (type === 'mix_m_d') ? 2 : 1;
+            
             let nH = na_fact * Ca * (Va/1000);
             let nOH = nb_fact * Cb * (Vb/1000);
             let Vtotal = (Va + Vb) / 1000;
+
+            // គណនា pH
             if (nH > nOH) {
                 h3o = (nH - nOH) / Vtotal;
                 ph = -Math.log10(h3o);
@@ -209,7 +221,28 @@
                 oh = (nOH - nH) / Vtotal;
                 ph = 14 + Math.log10(oh);
             } else { ph = 7; }
+
+            // គណនាមាឌបន្ថែមដើម្បី pH = 7 (nH = nOH)
+            // na_fact * Ca * Va_needed = nb_fact * Cb * Vb_needed
+            if (nH > nOH) {
+                // លើសអាស៊ីត ត្រូវបន្ថែមបាស
+                let Vb_needed = (na_fact * Ca * Va) / (nb_fact * Cb);
+                let Vb_add = Vb_needed - Vb;
+                titrationText = `ដើម្បីឱ្យ pH=7 ត្រូវបន្ថែមបាសចំនួន៖ ${Vb_add.toFixed(2)} mL`;
+            } else if (nOH > nH) {
+                // លើសបាស ត្រូវបន្ថែមអាស៊ីត
+                let Va_needed = (nb_fact * Cb * Vb) / (na_fact * Ca);
+                let Va_add = Va_needed - Va;
+                titrationText = `ដើម្បីឱ្យសូលុយស្យុងល្បាយមាន pH=7 ត្រូវបន្ថែមអាស៊ីតចំនួន៖ ${Va_add.toFixed(2)} mL ។`;
+            } else {
+                titrationText = "សូលុយស្យុងមានលក្ខណៈណឺតស្រាប់ (pH=7)!";
+            }
+            
+            document.getElementById('titrationMsg').innerText = titrationText;
+            document.getElementById('titration-info').style.display = 'block';
+
         } else {
+            document.getElementById('titration-info').style.display = 'none';
             const C = parseFloat(document.getElementById('inputVal').value);
             if (isNaN(C)) { alert("សូមបញ្ចូលតម្លៃ!"); return; }
             if(type === 'h3o') { h3o = C; ph = -Math.log10(h3o); }
