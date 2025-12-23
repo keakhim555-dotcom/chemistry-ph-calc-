@@ -41,6 +41,36 @@
 
         h2 { text-align: center; margin-top: 0; color: var(--primary); font-size: 22px; }
 
+        /* Tab Layout Style */
+        .tabs {
+            display: flex;
+            background: #e5e7eb;
+            padding: 5px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            gap: 5px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-radius: 10px;
+            font-family: 'Kantumruy Pro';
+            font-weight: 600;
+            font-size: 13px;
+            color: #4b5563;
+            transition: 0.3s;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
         .input-group { margin-bottom: 18px; }
         label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; color: #4b5563; }
 
@@ -54,7 +84,7 @@
             background: #f9fafb; padding: 15px; border-radius: 15px; margin-bottom: 15px;
         }
 
-        button {
+        .calc-action-btn {
             width: 100%; padding: 14px; background: var(--primary); color: white;
             border: none; border-radius: 12px; font-size: 16px; font-weight: bold;
             cursor: pointer; transition: 0.2s;
@@ -91,21 +121,28 @@
 
 <div class="main-wrapper">
     <div class="card">
-        <h2>🧪 គណនា pH និង pH ល្បាយក្រោយប្រតិកម្មនៅសីណ្ហភាព 25&deg;C</p></h2>
+        <h2>🧪 គណនា pH និង pH ល្បាយក្រោយប្រតិកម្មនៅសីតុណ្ហភាព 25&deg;C</p></h2>
         
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('single', this)">pH នៃសូលុយស្យុង</button>
+            <button class="tab-btn" onclick="switchTab('reverse', this)">រក [H₃O⁺] និង [OH⁻]</button>
+            <button class="tab-btn" onclick="switchTab('mix', this)">គណនា pH ល្បាយក្រោយអត្រាកម្ម </button>
+        </div>
+
         <div class="input-group">
-            <label>ប្រភេទការគណនា</label>
+            <label>ជម្រើសលម្អិត</label>
             <select id="calcType" onchange="toggleInputs()">
-                <option value="h3o">ម៉ូណូអាស៊ីតខ្លាំង (Cₐ) = [H₃O⁺] </option>
-                <option value="oh">ម៉ូណូបាសខ្លាំង (Cb) = [OH⁻] </option>
-                <option value="di_acid">ឌីអាស៊ីតខ្លាំង (Cₐ)</option>
-                <option value="di_base">ឌីបាសខ្លាំង (Cb)</option>
-                <option value="from_ph">រកកំហាប់ [H₃O⁺] ពីតម្លៃ pH</option>
-                <option value="from_poh">រកកំហាប់ [OH⁻] ពីតម្លៃ pOH</option>
-                <option disabled>──────────</option>
-                <option value="mix_m_m">អត្រាកម្មរវាង ៖ ម៉ូណូអាស៊ីតខ្លាំង + ម៉ូណូបាសខ្លាំង</option>
-                <option value="mix_d_m">អត្រាកម្មរវាង ៖ ឌីអាស៊ីតខ្លាំង + ម៉ូណូបាសខ្លាំង</option>
-                <option value="mix_m_d">អត្រាកម្មរវាង  ៖ ម៉ូណូអាស៊ីតខ្លាំង + ឌីបាសខ្លាំង</option>
+                <option value="h3o" data-tab="single">ម៉ូណូអាស៊ីតខ្លាំង (Cₐ) = [H₃O⁺]</option>
+                <option value="oh" data-tab="single">ម៉ូណូបាសខ្លាំង (Cb) = [OH⁻]</option>
+                <option value="di_acid" data-tab="single">ឌីអាស៊ីតខ្លាំង (Cₐ)</option>
+                <option value="di_base" data-tab="single">ឌីបាសខ្លាំង (Cb)</option>
+                
+                <option value="from_ph" data-tab="reverse"> [H₃O⁺] ពីតម្លៃ pH</option>
+                <option value="from_poh" data-tab="reverse"> [OH⁻] ពីតម្លៃ pOH</option>
+                
+                <option value="mix_m_m" data-tab="mix">ម៉ូណូអាស៊ីតខ្លាំង + ម៉ូណូបាសខ្លាំង</option>
+                <option value="mix_d_m" data-tab="mix">ឌីអាស៊ីតខ្លាំង + ម៉ូណូបាសខ្លាំង</option>
+                <option value="mix_m_d" data-tab="mix">ម៉ូណូអាស៊ីតខ្លាំង + ឌីបាសខ្លាំង</option>
             </select>
         </div>
 
@@ -121,7 +158,7 @@
             <div><label>មាឌបាស (mL)</label><input type="number" id="vb" step="any"></div>
         </div>
 
-        <button onclick="processCalculation()">គណនាឥឡូវនេះ</button>
+        <button class="calc-action-btn" onclick="processCalculation()">គណនាឥឡូវនេះ</button>
 
         <div id="result-display">
             <p id="resStatusText" style="margin:0;">លទ្ធផលគណនាគឺ</p>
@@ -144,8 +181,8 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <h3 style="margin:0; font-size: 16px;">📜 ប្រវត្តិគណនា</h3>
             <div>
-                <button class="btn-export" style="width:auto; padding: 5px 10px; font-size: 12px;" onclick="exportPDF()">Export PDF</button>
-                <button class="btn-clear" style="width:auto; padding: 5px 10px; font-size: 12px;" onclick="clearHistory()">លុបប្រវត្តិ</button>
+                <button class="btn-export" style="width:auto; padding: 5px 10px; font-size: 12px; border:none; border-radius:5px; color:white; cursor:pointer;" onclick="exportPDF()">Export PDF</button>
+                <button class="btn-clear" style="width:auto; padding: 5px 10px; font-size: 12px; border:none; border-radius:5px; color:white; cursor:pointer;" onclick="clearHistory()">លុបប្រវត្តិ</button>
             </div>
         </div>
         <div style="overflow-x: auto;">
@@ -166,7 +203,32 @@
 </div>
 
 <script>
-    window.onload = renderHistory;
+    window.onload = function() {
+        renderHistory();
+        switchTab('single', document.querySelector('.tab-btn')); // Set default tab
+    };
+
+    function switchTab(tabName, btn) {
+        // Update button UI
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Filter select options
+        const select = document.getElementById('calcType');
+        const options = select.options;
+        let firstVisible = null;
+
+        for (let i = 0; i < options.length; i++) {
+            if (options[i].getAttribute('data-tab') === tabName) {
+                options[i].style.display = 'block';
+                if (!firstVisible) firstVisible = options[i].value;
+            } else {
+                options[i].style.display = 'none';
+            }
+        }
+        select.value = firstVisible;
+        toggleInputs();
+    }
 
     function formatSci(num) {
         let str = num.toExponential(2);
@@ -187,8 +249,6 @@
         if(type === 'from_ph') inputLabel.innerText = "បញ្ចូលតម្លៃ pH (0-14)";
         else if(type === 'from_poh') inputLabel.innerText = "បញ្ចូលតម្លៃ pOH (0-14)";
         else inputLabel.innerText = "កំហាប់ជាម៉ូលេ (mol/L)";
-
-        // Reset Titration Display
         document.getElementById('titration-info').style.display = 'none';
     }
 
@@ -213,7 +273,6 @@
             let nOH = nb_fact * Cb * (Vb/1000);
             let Vtotal = (Va + Vb) / 1000;
 
-            // គណនា pH
             if (nH > nOH) {
                 h3o = (nH - nOH) / Vtotal;
                 ph = -Math.log10(h3o);
@@ -222,27 +281,21 @@
                 ph = 14 + Math.log10(oh);
             } else { ph = 7; }
 
-            // គណនាមាឌបន្ថែមដើម្បី pH = 7 (nH = nOH)
-            // na_fact * Ca * Va_needed = nb_fact * Cb * Vb_needed
             if (nH > nOH) {
-                // លើសអាស៊ីត ត្រូវបន្ថែមបាស
                 let Vb_needed = (na_fact * Ca * Va) / (nb_fact * Cb);
                 let Vb_add = Vb_needed - Vb;
                 titrationText = `ដើម្បីឱ្យ pH=7 ត្រូវបន្ថែមបាសចំនួន៖ ${Vb_add.toFixed(2)} mL`;
             } else if (nOH > nH) {
-                // លើសបាស ត្រូវបន្ថែមអាស៊ីត
                 let Va_needed = (nb_fact * Cb * Vb) / (na_fact * Ca);
                 let Va_add = Va_needed - Va;
-                titrationText = `ដើម្បីឱ្យសូលុយស្យុងល្បាយមាន pH=7 ត្រូវបន្ថែមអាស៊ីតចំនួន៖ ${Va_add.toFixed(2)} mL ។`;
+                titrationText = `ដើម្បីឱ្យសូលុយស្យុងល្បាយមាន pH=7 ត្រូវបន្ថែមអាស៊ីតចំនួន៖ ${Va_add.toFixed(2)} mL`;
             } else {
                 titrationText = "សូលុយស្យុងមានលក្ខណៈណឺតស្រាប់ (pH=7)!";
             }
-            
             document.getElementById('titrationMsg').innerText = titrationText;
             document.getElementById('titration-info').style.display = 'block';
 
         } else {
-            document.getElementById('titration-info').style.display = 'none';
             const C = parseFloat(document.getElementById('inputVal').value);
             if (isNaN(C)) { alert("សូមបញ្ចូលតម្លៃ!"); return; }
             if(type === 'h3o') { h3o = C; ph = -Math.log10(h3o); }
@@ -285,15 +338,12 @@
         
         display.style.display = 'block';
         display.className = (ph < 6.95) ? 'acid-bg' : (ph > 7.05 ? 'base-bg' : 'neutral-bg');
-        document.getElementById('resBadge').innerText = (ph < 6.95) ? "អាស៊ីត (Acid)" : (ph > 7.05 ? "បាស (Base)" : "ណឺត (Neutral)");
+        document.getElementById('resBadge').innerText = (ph < 6.95) ? "អាស៊ីត (Acid)" : (ph > 7.05) ? "បាស (Base)" : "ណឺត (Neutral)";
     }
 
     function saveToHistory(type, ph, poh, h3o, oh) {
         let history = JSON.parse(localStorage.getItem('phHistoryV3') || '[]');
-        history.unshift({ 
-            type, ph: ph.toFixed(2), poh: poh.toFixed(2), 
-            h3o: formatSci(h3o), oh: formatSci(oh) 
-        });
+        history.unshift({ type, ph: ph.toFixed(2), poh: poh.toFixed(2), h3o, oh });
         localStorage.setItem('phHistoryV3', JSON.stringify(history.slice(0, 15)));
         renderHistory();
     }
@@ -322,11 +372,11 @@
     function exportPDF() {
         const element = document.getElementById('history-section');
         const opt = {
-            margin:       10,
-            filename:     'chemistry_history.pdf',
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2 },
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            margin: 10,
+            filename: 'chemistry_history.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
         html2pdf().set(opt).from(element).save();
     }
