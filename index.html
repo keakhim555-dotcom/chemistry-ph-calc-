@@ -26,6 +26,7 @@
             align-items: center;
             padding: 20px;
             color: #1f2937;
+            flex-direction: column; /* បន្ថែមដើម្បីឱ្យ Creator Tag នៅខាងក្រោម */
         }
 
         .main-wrapper { width: 100%; max-width: 800px; }
@@ -41,7 +42,6 @@
 
         h2 { text-align: center; margin-top: 0; color: var(--primary); font-size: 22px; }
 
-        /* Tab Layout Style */
         .tabs {
             display: flex;
             background: #e5e7eb;
@@ -115,13 +115,22 @@
         .acid-bg { background: var(--acid-color); color: white; }
         .base-bg { background: var(--base-color); color: white; }
         .neutral-bg { background: var(--neutral-color); color: white; }
+
+        /* Creator Tag Style */
+        .creator-tag {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #ffffff;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
     </style>
 </head>
 <body>
 
 <div class="main-wrapper">
     <div class="card">
-        <h2>🧪 គណនា pH និង pH ល្បាយក្រោយប្រតិកម្មនៅសីតុណ្ហភាព 25&deg;C</p></h2>
+        <h2>🧪 គណនានៅក្នុងមេរៀនអត្រាកម្មនៅសីតុណ្ហភាព 25&deg;C</h2>
         
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('single', this)">pH នៃសូលុយស្យុង</button>
@@ -137,8 +146,8 @@
                 <option value="di_acid" data-tab="single">ឌីអាស៊ីតខ្លាំង (Cₐ)</option>
                 <option value="di_base" data-tab="single">ឌីបាសខ្លាំង (Cb)</option>
                 
-                <option value="from_ph" data-tab="reverse"> [H₃O⁺] ពីតម្លៃ pH</option>
-                <option value="from_poh" data-tab="reverse"> [OH⁻] ពីតម្លៃ pOH</option>
+                <option value="from_ph" data-tab="reverse"> ចេញពីតម្លៃ pH</option>
+                <option value="from_poh" data-tab="reverse"> ចេញពីតម្លៃ pOH</option>
                 
                 <option value="mix_m_m" data-tab="mix">ម៉ូណូអាស៊ីតខ្លាំង + ម៉ូណូបាសខ្លាំង</option>
                 <option value="mix_d_m" data-tab="mix">ឌីអាស៊ីតខ្លាំង + ម៉ូណូបាសខ្លាំង</option>
@@ -202,22 +211,22 @@
     </div>
 </div>
 
+<div class="creator-tag">
+    បង្កើតដោយ កៀ ឃីម ៖ កម្មវិធីជំនួយការបង្រៀនគីមីវិទ្យា
+</div>
+
 <script>
     window.onload = function() {
         renderHistory();
-        switchTab('single', document.querySelector('.tab-btn')); // Set default tab
+        switchTab('single', document.querySelector('.tab-btn'));
     };
 
     function switchTab(tabName, btn) {
-        // Update button UI
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-
-        // Filter select options
         const select = document.getElementById('calcType');
         const options = select.options;
         let firstVisible = null;
-
         for (let i = 0; i < options.length; i++) {
             if (options[i].getAttribute('data-tab') === tabName) {
                 options[i].style.display = 'block';
@@ -263,16 +272,12 @@
             const Va = parseFloat(document.getElementById('va').value);
             const Cb = parseFloat(document.getElementById('cb').value);
             const Vb = parseFloat(document.getElementById('vb').value);
-            
             if ([Ca, Va, Cb, Vb].some(isNaN)) { alert("សូមបញ្ចូលលេខឱ្យគ្រប់!"); return; }
-            
             let na_fact = (type === 'mix_d_m') ? 2 : 1;
             let nb_fact = (type === 'mix_m_d') ? 2 : 1;
-            
             let nH = na_fact * Ca * (Va/1000);
             let nOH = nb_fact * Cb * (Vb/1000);
             let Vtotal = (Va + Vb) / 1000;
-
             if (nH > nOH) {
                 h3o = (nH - nOH) / Vtotal;
                 ph = -Math.log10(h3o);
@@ -280,7 +285,6 @@
                 oh = (nOH - nH) / Vtotal;
                 ph = 14 + Math.log10(oh);
             } else { ph = 7; }
-
             if (nH > nOH) {
                 let Vb_needed = (na_fact * Ca * Va) / (nb_fact * Cb);
                 let Vb_add = Vb_needed - Vb;
@@ -294,7 +298,6 @@
             }
             document.getElementById('titrationMsg').innerText = titrationText;
             document.getElementById('titration-info').style.display = 'block';
-
         } else {
             const C = parseFloat(document.getElementById('inputVal').value);
             if (isNaN(C)) { alert("សូមបញ្ចូលតម្លៃ!"); return; }
@@ -305,12 +308,10 @@
             else if(type === 'from_ph') { ph = C; }
             else if(type === 'from_poh') { ph = 14 - C; }
         }
-
         ph = Math.max(0, Math.min(14, ph));
         poh = 14 - ph;
         h3o = Math.pow(10, -ph);
         oh = Math.pow(10, -poh);
-
         displayResult(ph, poh, h3o, oh, type);
         saveToHistory(typeLabel, ph, poh, h3o, oh);
     }
@@ -319,7 +320,6 @@
         const display = document.getElementById('result-display');
         const resMain = document.getElementById('resMainValue');
         const resText = document.getElementById('resStatusText');
-
         if(type === 'from_poh') {
             resText.innerText = "កំហាប់អ៊ីយ៉ុង [OH⁻] គឺ";
             resMain.innerHTML = formatSci(oh);
@@ -330,12 +330,10 @@
             resText.innerText = "pH នៃសូលុយស្យុងគឺ";
             resMain.innerText = ph.toFixed(2);
         }
-
         document.getElementById('resPH2').innerText = ph.toFixed(2);
         document.getElementById('resPOH').innerText = poh.toFixed(2);
         document.getElementById('resH3O').innerHTML = formatSci(h3o);
         document.getElementById('resOH').innerHTML = formatSci(oh);
-        
         display.style.display = 'block';
         display.className = (ph < 6.95) ? 'acid-bg' : (ph > 7.05 ? 'base-bg' : 'neutral-bg');
         document.getElementById('resBadge').innerText = (ph < 6.95) ? "អាស៊ីត (Acid)" : (ph > 7.05) ? "បាស (Base)" : "ណឺត (Neutral)";
@@ -343,7 +341,7 @@
 
     function saveToHistory(type, ph, poh, h3o, oh) {
         let history = JSON.parse(localStorage.getItem('phHistoryV3') || '[]');
-        history.unshift({ type, ph: ph.toFixed(2), poh: poh.toFixed(2), h3o, oh });
+        history.unshift({ type, ph: ph.toFixed(2), poh: poh.toFixed(2), h3o: formatSci(h3o), oh: formatSci(oh) });
         localStorage.setItem('phHistoryV3', JSON.stringify(history.slice(0, 15)));
         renderHistory();
     }
