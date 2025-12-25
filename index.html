@@ -23,43 +23,46 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 10px; /* Reduced padding */
             color: #1f2937;
             flex-direction: column; 
         }
 
-        .main-wrapper { width: 100%; max-width: 800px; }
+        .main-wrapper { width: 100%; max-width: 600px; /* Reduced max-width for compactness */ }
 
         .card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            padding: 30px;
-            border-radius: 24px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-            margin-bottom: 20px;
+            padding: 20px; /* Reduced padding */
+            border-radius: 20px;
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2);
+            margin-bottom: 15px;
         }
 
-        h2 { text-align: center; margin-top: 0; color: var(--primary); font-size: 22px; }
+        h2 { 
+            text-align: center; margin-top: 0; margin-bottom: 15px; 
+            color: var(--primary); font-size: 18px; /* Smaller font */
+        }
 
         .tabs {
             display: flex;
             background: #e5e7eb;
-            padding: 5px;
-            border-radius: 14px;
-            margin-bottom: 20px;
-            gap: 5px;
+            padding: 4px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            gap: 4px;
         }
 
         .tab-btn {
             flex: 1;
-            padding: 10px;
+            padding: 8px 5px; /* Compact padding */
             border: none;
             background: none;
             cursor: pointer;
-            border-radius: 10px;
+            border-radius: 8px;
             font-family: 'Kantumruy Pro';
             font-weight: 600;
-            font-size: 13px;
+            font-size: 12px; /* Smaller font */
             color: #4b5563;
             transition: 0.3s;
         }
@@ -70,46 +73,127 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .input-group { margin-bottom: 18px; }
-        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; color: #4b5563; }
+        .input-group { margin-bottom: 12px; /* Reduced margin */ }
+        label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 13px; color: #4b5563; }
 
         select, input {
-            width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb;
-            border-radius: 12px; font-size: 15px; outline: none; box-sizing: border-box;
+            width: 100%; padding: 8px 12px; /* Compact inputs */
+            border: 2px solid #e5e7eb;
+            border-radius: 10px; font-size: 14px; outline: none; box-sizing: border-box;
+            background: white;
         }
 
         .mixture-inputs {
-            display: none; grid-template-columns: 1fr 1fr; gap: 15px;
-            background: #f9fafb; padding: 15px; border-radius: 15px; margin-bottom: 15px;
+            display: none; grid-template-columns: 1fr 1fr; gap: 10px;
+            background: #f9fafb; padding: 12px; border-radius: 12px; margin-bottom: 12px;
         }
 
         .calc-action-btn {
-            width: 100%; padding: 14px; background: var(--primary); color: white;
-            border: none; border-radius: 12px; font-size: 16px; font-weight: bold;
+            width: 100%; padding: 12px; background: var(--primary); color: white;
+            border: none; border-radius: 10px; font-size: 15px; font-weight: bold;
             cursor: pointer; transition: 0.2s;
+            margin-top: 5px;
         }
 
         #result-display {
-            margin-top: 25px; padding: 20px; border-radius: 16px;
+            margin-top: 20px; padding: 15px; border-radius: 14px;
             text-align: center; display: none;
+            position: relative;
         }
 
-        .solution-steps {
+        /* --- Compact Visual pH Scale --- */
+        .scale-section {
             margin-top: 20px;
             padding: 15px;
-            background: rgba(255, 255, 255, 0.9);
-            border-left: 5px solid var(--primary);
-            border-radius: 8px;
-            text-align: left;
-            font-size: 14px;
-            display: none;
-            color: #374151;
-            line-height: 1.6;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
         }
 
+        .scale-title {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #374151;
+        }
+
+        .visual-scale-container {
+            width: 100%;
+            height: 15px; /* Thinner bar */
+            background: linear-gradient(to right, 
+                #ef4444 0%, #f97316 14.2%, #fbbf24 28.5%, 
+                #10b981 50%, 
+                #3b82f6 71.4%, #6366f1 85.7%, #a855f7 100%);
+            border-radius: 10px;
+            position: relative;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .scale-marker {
+            position: absolute;
+            top: -8px;
+            width: 4px; /* Thinner marker */
+            height: 35px; /* Shorter marker */
+            background: #111827;
+            border-radius: 3px;
+            transition: left 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateX(-50%);
+            z-index: 5;
+            box-shadow: 0 0 5px rgba(0,0,0,0.3);
+        }
+
+        .scale-marker::before {
+            content: attr(data-value);
+            position: absolute;
+            top: -25px; /* Adjusted position */
+            left: 50%;
+            transform: translateX(-50%);
+            background: #111827;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            white-space: nowrap;
+        }
+
+        .scale-marker::after {
+            content: '▼';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: #111827;
+            animation: pointBounce 0.8s infinite alternate;
+        }
+
+        .scale-numbers {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            padding: 0 2px;
+        }
+
+        .scale-numbers span {
+            font-size: 10px;
+            font-weight: bold;
+            color: #4b5563;
+        }
+
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+            padding: 0 2px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        /* ----------------------------------------- */
+
         .details-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;
-            background: rgba(255,255,255,0.3); padding: 10px; border-radius: 10px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px;
+            background: rgba(255,255,255,0.3); padding: 8px; border-radius: 8px;
+            font-size: 13px;
         }
 
         .acid-bg { background: var(--acid-color); color: white; }
@@ -117,48 +201,38 @@
         .neutral-bg { background: var(--neutral-color); color: white; }
 
         .creator-tag {
-            margin-top: 20px;
-            font-size: 14px;
+            margin-top: 15px;
+            font-size: 12px;
             color: #ffffff;
             font-weight: bold;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
-
-        .ph-info-card {
-            margin-top: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
-        }
-        .ph-scale-bar {
-            height: 25px;
-            width: 100%;
-            background: linear-gradient(to right, #ef4444, #f97316, #fbbf24, #10b981, #3b82f6, #6366f1, #a855f7);
-            border-radius: 8px;
-            margin: 15px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 10px;
-            color: white;
-            font-weight: bold;
-            font-size: 12px;
-        }
-        .ph-desc { font-size: 13px; line-height: 1.6; color: #374151; }
-        .ph-desc b { color: var(--primary); }
     </style>
 </head>
 <body>
 
 <div class="main-wrapper">
     <div class="card">
-        <h2>🧪 គណនានៅក្នុងមេរៀនអត្រាកម្មនៅសីតុណ្ហភាព 25&deg;C</h2>
+        <h2>🧪 គណនា pH នៃសូលុយស្យុងនៅសីតុណ្ហភាព(0-60°C)</h2>
         
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('single', this)">pH នៃសូលុយស្យុង</button>
             <button class="tab-btn" onclick="switchTab('reverse', this)">រក [H₃O⁺] និង [OH⁻]</button>
             <button class="tab-btn" onclick="switchTab('mix', this)">គណនា pH ល្បាយក្រោយអត្រាកម្ម </button>
+        </div>
+
+        <div class="input-group">
+            <label>សីតុណ្ហភាព (&deg;C)</label>
+            <select id="tempInput" onchange="toggleInputs()">
+                <option value="0">0 °C (pKw = 14.94)</option>
+                <option value="10">10 °C (pKw = 14.53)</option>
+                <option value="20">20 °C (pKw = 14.17)</option>
+                <option value="25" selected>25 °C (pKw = 14.00)</option>
+                <option value="30">30 °C (pKw = 13.83)</option>
+                <option value="40">40 °C (pKw = 13.54)</option>
+                <option value="50">50 °C (pKw = 13.26)</option>
+                <option value="60">60 °C (pKw = 13.02)</option>
+            </select>
         </div>
 
         <div class="input-group">
@@ -191,9 +265,10 @@
         <button class="calc-action-btn" onclick="processCalculation()">គណនាឥឡូវនេះ</button>
 
         <div id="result-display">
-            <p id="resStatusText" style="margin:0;">លទ្ធផលគណនាគឺ</p>
-            <h1 id="resMainValue" style="font-size: 35px; margin: 5px 0;">--</h1> 
-            <div id="resBadge" style="display:inline-block; padding: 5px 15px; border-radius: 20px; background: rgba(0,0,0,0.1);">Status</div>
+            <p id="resStatusText" style="margin:0; font-size: 13px;">លទ្ធផលគណនាគឺ</p>
+            <h1 id="resMainValue" style="font-size: 28px; margin: 5px 0;">--</h1> 
+            
+            <div id="resBadge" style="display:inline-block; padding: 3px 12px; border-radius: 15px; background: rgba(0,0,0,0.1); font-size: 13px;">Status</div>
             
             <div class="details-grid">
                 <div>[H₃O⁺]: <span id="resH3O"></span></div>
@@ -202,27 +277,24 @@
                 <div>pOH: <span id="resPOH"></span></div>
             </div>
 
-            <div id="solutionSteps" class="solution-steps"></div>
+            <div class="scale-section">
+                <div class="scale-title">មាត្រដ្ឋាន pH (pH Scale)</div>
+                <div class="visual-scale-container">
+                    <div id="scaleMarker" class="scale-marker" style="left: 50%;" data-value="7.00"></div>
+                </div>
+                <div class="scale-numbers">
+                    <span>0</span><span>2</span><span>4</span><span>6</span><span id="neutralMarker" style="color:var(--primary)">7</span><span>8</span><span>10</span><span>12</span><span>14</span>
+                </div>
+                <div class="scale-labels">
+                    <span style="color:var(--acid-color)">អាស៊ីត</span>
+                    <span style="color:var(--neutral-color)">ណឺត</span>
+                    <span style="color:var(--base-color)">បាស</span>
+                </div>
+            </div>
 
-            <div id="titration-info" style="margin-top: 15px; font-weight: bold; border-top: 1px solid rgba(255,255,255,0.5); padding-top: 10px; display: none;">
+            <div id="titration-info" style="margin-top: 15px; font-weight: bold; border-top: 1px solid rgba(255,255,255,0.5); padding-top: 10px; display: none; font-size: 13px;">
                 <span id="titrationMsg"></span>
             </div>
-        </div>
-    </div>
-
-    <div class="ph-info-card">
-        <h3 style="margin-top:0; color:var(--primary); font-size:18px;">📚 ចំណេះដឹងបន្ថែម៖ ក្រិត pH ក្នុងធម្មជាតិ</h3>
-        <div class="ph-desc">
-            ក្រិត pH មានតម្លៃចាប់ពី <b>0 ដល់ 14</b>៖<br>
-            • <b>pH < 7</b>: ជាអាស៊ីត (កាន់តែតូច កាន់តែខ្លាំង ដូចជាអាស៊ីតក្រពះ ទឹកក្រូចឆ្មារ)<br>
-            • <b>pH = 7</b>: ជាណឺត (ដូចជាទឹកបរិសុទ្ធ)<br>
-            • <b>pH > 7</b>: ជាបាស (កាន់តែធំ កាន់តែខ្លាំង ដូចជាទឹកសាប៊ូបោកខោអាវ ទឹកអូហ្សាវែល)
-        </div>
-        <div class="ph-scale-bar">
-            <span>0</span><span>2</span><span>4</span><span>6</span><span>7</span><span>8</span><span>10</span><span>12</span><span>14</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; font-size: 11px; color: #6b7280; font-weight: bold;">
-            <span>អាស៊ីតខ្លាំង</span><span>ណឺត</span><span>បាសខ្លាំង</span>
         </div>
     </div>
 </div>
@@ -230,6 +302,14 @@
 <div class="creator-tag">បង្កើតដោយ កៀ ឃីម ៖ កម្មវិធីជំនួយការបង្រៀនគីមីវិទ្យា</div>
 
 <script>
+    const pKwData = {
+        0: 14.94, 10: 14.53, 20: 14.17, 25: 14.00, 30: 13.83, 40: 13.54, 50: 13.26, 60: 13.02
+    };
+
+    function getpKw(temp) {
+        return pKwData[temp] || 14.00;
+    }
+
     window.onload = function() {
         switchTab('single', document.querySelector('.tab-btn'));
     };
@@ -254,13 +334,10 @@
 
     function formatSci(num) {
         if (num === undefined || isNaN(num)) return "0";
+        if (num >= 0.01 && num <= 100) return num.toFixed(4);
         let str = num.toExponential(2);
         let parts = str.split('e');
-        if (parts.length === 2) {
-            let exp = parseInt(parts[1]);
-            return `${parts[0]} × 10<sup>${exp}</sup>`;
-        }
-        return str;
+        return `${parts[0]} × 10<sup>${parseInt(parts[1])}</sup>`;
     }
 
     function toggleInputs() {
@@ -269,17 +346,19 @@
         document.getElementById('singleInputGroup').style.display = type.startsWith('mix') ? 'none' : 'block';
         document.getElementById('mixtureInputs').style.display = type.startsWith('mix') ? 'grid' : 'none';
         
-        if(type === 'from_ph') inputLabel.innerText = "បញ្ចូលតម្លៃ pH (0-14)";
-        else if(type === 'from_poh') inputLabel.innerText = "បញ្ចូលតម្លៃ pOH (0-14)";
+        if(type === 'from_ph') inputLabel.innerText = "បញ្ចូលតម្លៃ pH";
+        else if(type === 'from_poh') inputLabel.innerText = "បញ្ចូលតម្លៃ pOH";
         else inputLabel.innerText = "កំហាប់ជាម៉ូលេ (mol/L)";
         document.getElementById('titration-info').style.display = 'none';
-        document.getElementById('solutionSteps').style.display = 'none';
     }
 
     function processCalculation() {
         const type = document.getElementById('calcType').value;
+        const temp = parseFloat(document.getElementById('tempInput').value);
+        const pKw = getpKw(temp);
+        const neutralPoint = pKw / 2;
+        
         let ph, h3o, oh, poh;
-        let stepsHtml = "<b>📝 សម្រាយការគណនា៖</b><br>";
 
         if (type.startsWith('mix')) {
             const Ca = parseFloat(document.getElementById('ca').value);
@@ -294,80 +373,66 @@
             let nOH = nb_fact * Cb * (Vb/1000);
             let Vtotal = (Va + Vb) / 1000;
 
-            stepsHtml += `1. រកចំនួនម៉ូល H₃O⁺: n = ${na_fact} × Ca × Va = ${nH.toExponential(2)} mol<br>`;
-            stepsHtml += `2. រកចំនួនម៉ូល OH⁻: n = ${nb_fact} × Cb × Vb = ${nOH.toExponential(2)} mol<br>`;
-
             if (nH > nOH) {
                 h3o = (nH - nOH) / Vtotal;
                 ph = -Math.log10(h3o);
-                stepsHtml += `3. អាស៊ីតលើស៖ [H₃O⁺] = (nH - nOH) / V_total = ${h3o.toExponential(2)} M<br>`;
-                stepsHtml += `4. រូបមន្ត៖ pH = -log[H₃O⁺] = ${ph.toFixed(2)}`;
             } else if (nOH > nH) {
                 oh = (nOH - nH) / Vtotal;
-                ph = 14 + Math.log10(oh);
-                stepsHtml += `3. បាសលើស៖ [OH⁻] = (nOH - nH) / V_total = ${oh.toExponential(2)} M<br>`;
-                stepsHtml += `4. រូបមន្ត៖ pH = 14 + log[OH⁻] = ${ph.toFixed(2)}`;
+                poh = -Math.log10(oh);
+                ph = pKw - poh;
             } else { 
-                ph = 7; 
-                stepsHtml += `3. ចំនួនម៉ូលស្មើគ្នា (nH = nOH) => សូលុយស្យុងណឺត => pH = 7`;
+                ph = neutralPoint; 
             }
         } else {
             const C = parseFloat(document.getElementById('inputVal').value);
             if (isNaN(C)) { alert("សូមបញ្ចូលតម្លៃ!"); return; }
-            if(type === 'h3o') { 
-                h3o = C; ph = -Math.log10(h3o); 
-                stepsHtml += `តាមរូបមន្ត៖ [H₃O⁺] = Cₐ = ${C} M<br>pH = -log[H₃O⁺] = ${ph.toFixed(2)}`;
-            } else if(type === 'di_acid') { 
-                h3o = 2 * C; ph = -Math.log10(h3o); 
-                stepsHtml += `តាមរូបមន្ត៖ [H₃O⁺] = 2 × Cₐ = ${h3o} M<br>pH = -log[H₃O⁺] = ${ph.toFixed(2)}`;
-            } else if(type === 'oh') { 
-                oh = C; ph = 14 + Math.log10(oh); 
-                stepsHtml += `តាមរូបមន្ត៖ [OH⁻] = C_b = ${C} M<br>pH = 14 + log[OH⁻] = ${ph.toFixed(2)}`;
-            } else if(type === 'di_base') { 
-                oh = 2 * C; ph = 14 + Math.log10(oh); 
-                stepsHtml += `តាមរូបមន្ត៖ [OH⁻] = 2 × C_b = ${oh} M<br>pH = 14 + log[OH⁻] = ${ph.toFixed(2)}`;
-            } else if(type === 'from_ph') { 
-                ph = C; stepsHtml += `ស្គាល់ pH = ${C}<br>=> [H₃O⁺] = 10<sup>-pH</sup> = 10<sup>-${C}</sup> M`;
-            } else if(type === 'from_poh') { 
-                ph = 14 - C; stepsHtml += `ស្គាល់ pOH = ${C}<br>=> pH = 14 - pOH = ${ph.toFixed(2)}<br>=> [OH⁻] = 10<sup>-pOH</sup>`;
-            }
+            if(type === 'h3o') { h3o = C; ph = -Math.log10(h3o); } 
+            else if(type === 'di_acid') { h3o = 2 * C; ph = -Math.log10(h3o); } 
+            else if(type === 'oh') { oh = C; poh = -Math.log10(oh); ph = pKw - poh; } 
+            else if(type === 'di_base') { oh = 2 * C; poh = -Math.log10(oh); ph = pKw - poh; } 
+            else if(type === 'from_ph') { ph = C; } 
+            else if(type === 'from_poh') { ph = pKw - C; }
         }
 
-        ph = Math.max(0, Math.min(14, ph));
-        poh = 14 - ph;
+        poh = pKw - ph;
         h3o = Math.pow(10, -ph);
         oh = Math.pow(10, -poh);
 
-        displayResult(ph, poh, h3o, oh, type, stepsHtml);
+        displayResult(ph, poh, h3o, oh, type, neutralPoint);
     }
 
-    function displayResult(ph, poh, h3o, oh, type, stepsHtml) {
+    function displayResult(ph, poh, h3o, oh, type, neutralPoint) {
         const display = document.getElementById('result-display');
+        const marker = document.getElementById('scaleMarker');
         const resMain = document.getElementById('resMainValue');
-        const resText = document.getElementById('resStatusText');
-        const stepsBox = document.getElementById('solutionSteps');
 
-        if(type === 'from_poh') {
-            resText.innerText = "កំហាប់អ៊ីយ៉ុង [OH⁻] គឺ";
-            resMain.innerHTML = formatSci(oh);
-        } else if(type === 'from_ph') {
-            resText.innerText = "កំហាប់អ៊ីយ៉ុង [H₃O⁺] គឺ";
-            resMain.innerHTML = formatSci(h3o);
-        } else {
-            resText.innerText = "pH នៃសូលុយស្យុងគឺ";
-            resMain.innerText = ph.toFixed(2);
-        }
+        if(type === 'from_poh') resMain.innerHTML = formatSci(oh);
+        else if(type === 'from_ph') resMain.innerHTML = formatSci(h3o);
+        else resMain.innerText = ph.toFixed(2);
 
         document.getElementById('resPH2').innerText = ph.toFixed(2);
         document.getElementById('resPOH').innerText = poh.toFixed(2);
         document.getElementById('resH3O').innerHTML = formatSci(h3o);
         document.getElementById('resOH').innerHTML = formatSci(oh);
+        document.getElementById('neutralMarker').innerText = neutralPoint.toFixed(1);
         
-        stepsBox.innerHTML = stepsHtml;
-        stepsBox.style.display = 'block';
+        let pos = (ph / 14) * 100;
+        pos = Math.max(0, Math.min(100, pos));
+        marker.style.left = pos + "%";
+        marker.setAttribute('data-value', "pH " + ph.toFixed(2));
+
         display.style.display = 'block';
-        display.className = (ph < 6.95) ? 'acid-bg' : (ph > 7.05 ? 'base-bg' : 'neutral-bg');
-        document.getElementById('resBadge').innerText = (ph < 6.95) ? "អាស៊ីត (Acid)" : (ph > 7.05) ? "បាស (Base)" : "ណឺត (Neutral)";
+
+        if (ph < neutralPoint - 0.02) {
+            display.className = 'acid-bg';
+            document.getElementById('resBadge').innerText = "អាស៊ីត (Acid)";
+        } else if (ph > neutralPoint + 0.02) {
+            display.className = 'base-bg';
+            document.getElementById('resBadge').innerText = "បាស (Base)";
+        } else {
+            display.className = 'neutral-bg';
+            document.getElementById('resBadge').innerText = "ណឺត (Neutral)";
+        }
     }
 </script>
 </body>
