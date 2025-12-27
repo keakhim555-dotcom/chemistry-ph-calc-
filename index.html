@@ -3,541 +3,459 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>កម្មវិធីជំនួយការសិក្សាគីមីវិទ្យា - Advanced Chemistry Toolkit</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <title>PH Calculator - Pro Edition</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;700&display=swap');
+
         :root {
-            --sidebar-width: 280px;
-            --primary-color: #1a73e8;
-            --secondary-color: #27ae60;
-            --bg-color: #f0f2f5;
-            --white: #ffffff;
-            --acid-color: #ff4d4d;
-            --base-color: #7d5fff;
-            --neutral-color: #2ecc71;
+            --primary: #4f46e5;
+            --acid-color: #ef4444;
+            --base-color: #10b981;
+            --neutral-color: #3b82f6;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Kantumruy Pro', sans-serif; }
+        body {
+            font-family: 'Kantumruy Pro', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            color: #1f2937;
+            flex-direction: column; 
+        }
 
-        body { display: flex; background-color: var(--bg-color); min-height: 100vh; }
+        .main-wrapper { width: 100%; max-width: 600px; }
 
-        .sidebar {
-            width: var(--sidebar-width);
-            background-color: #2c3e50;
-            color: white;
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             padding: 20px;
-            position: fixed;
-            height: 100%;
-            overflow-y: auto;
-            z-index: 1000;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2);
+            margin-bottom: 15px;
         }
 
-        .sidebar h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #4dabf7;
-            font-size: 1.5rem;
-            border-bottom: 1px solid #3e4f5f;
-            padding-bottom: 10px;
+        h2 { 
+            text-align: center; margin-top: 0; margin-bottom: 15px; 
+            color: var(--primary); font-size: 18px;
         }
 
-        .nav-item {
-            padding: 15px;
-            margin-bottom: 10px;
+        .tabs {
+            display: flex;
+            background: #e5e7eb;
+            padding: 4px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            gap: 4px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 8px 5px;
+            border: none;
+            background: none;
             cursor: pointer;
             border-radius: 8px;
+            font-family: 'Kantumruy Pro';
+            font-weight: 600;
+            font-size: 12px;
+            color: #4b5563;
             transition: 0.3s;
-            display: flex;
-            align-items: center;
-            list-style: none;
         }
 
-        .nav-item:hover, .nav-item.active { background-color: var(--primary-color); color: white; }
-
-        .main-content { margin-left: var(--sidebar-width); flex: 1; padding: 30px; }
-
-        .calculator-card {
-            background: var(--white);
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            display: none;
-            animation: fadeIn 0.4s ease;
+        .tab-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .calculator-card.active { display: block; }
+        .input-group { margin-bottom: 12px; }
+        label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 13px; color: #4b5563; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .input-panel { background: #f8f9fa; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 25px; border: 1px solid #e0e0e0; }
-        .input-box { width: 100%; max-width: 800px; padding: 12px; border: 2px solid #1a73e8; border-radius: 8px; font-size: 18px; text-align: center; margin-bottom: 15px; outline: none; }
-        .eq-display { font-size: 2em; padding: 20px; background: #fff; border: 1.5px dashed #1a73e8; border-radius: 12px; text-align: center; margin-bottom: 25px; }
-        .m-coef { color: #d9480f; font-weight: bold; }
-        .arrow { color: #2f9e44; font-weight: bold; margin: 0 10px; }
-        sub { font-size: 0.6em; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; }
-        th { background: #1a73e8; color: white; padding: 10px 5px; font-size: 14px; border: 1px solid #1565c0; }
-        td { border: 1px solid #dee2e6; padding: 8px; text-align: center; font-size: 14px; }
-        .row-label { background: #f1f3f5; font-weight: bold; text-align: left; padding-left: 10px; }
-        .calc-input { width: 90%; padding: 5px; text-align: center; border: 1px solid #ccc; border-radius: 4px; background: #fffde7; font-weight: bold; }
-        .btn { border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; margin: 5px; }
-        .btn-calc { background: #1a73e8; color: white; }
-        .btn-clear { background: #f4a72b; color: white; }
-        .limiting { background: #ff7675 !important; color: white; padding: 2px 5px; border-radius: 4px; }
-        .summary-box { margin-top: 15px; padding: 15px; border-radius: 8px; background: #e3f2fd; font-weight: bold; border-left: 5px solid #1a73e8; }
-
-        /* Styles for pH Calculator */
-        .ph-tabs { display: flex; background: #e5e7eb; padding: 4px; border-radius: 12px; margin-bottom: 15px; gap: 4px; }
-        .ph-tab-btn { flex: 1; padding: 8px 5px; border: none; background: none; cursor: pointer; border-radius: 8px; font-weight: 600; font-size: 12px; color: #4b5563; transition: 0.3s; }
-        .ph-tab-btn.active { background: white; color: var(--primary-color); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .ph-input-group { margin-bottom: 12px; }
-        .ph-input-group label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 13px; color: #4b5563; }
-        .ph-select, .ph-input { width: 100%; padding: 8px 12px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 14px; outline: none; }
-        .mixture-inputs { display: none; grid-template-columns: 1fr 1fr; gap: 10px; background: #f9fafb; padding: 12px; border-radius: 12px; margin-bottom: 12px; }
-        
-        #result-display { margin-top: 20px; padding: 20px; border-radius: 14px; text-align: center; display: none; transition: all 0.5s ease; color: white; }
-        
-        /* New pH Scale Section Styling */
-        .ph-scale-section {
-            margin-top: 30px;
-            padding: 20px;
-            background: #fff;
-            border-radius: 15px;
-            border: 1px solid #e0e0e0;
-            display: none;
+        select, input {
+            width: 100%; padding: 8px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px; font-size: 14px; outline: none; box-sizing: border-box;
+            background: white;
         }
-        .visual-scale-container { 
-            width: 100%; 
-            height: 30px; 
+
+        .mixture-inputs {
+            display: none; grid-template-columns: 1fr 1fr; gap: 10px;
+            background: #f9fafb; padding: 12px; border-radius: 12px; margin-bottom: 12px;
+        }
+
+        .calc-action-btn {
+            width: 100%; padding: 12px; background: var(--primary); color: white;
+            border: none; border-radius: 10px; font-size: 15px; font-weight: bold;
+            cursor: pointer; transition: 0.2s;
+            margin-top: 5px;
+        }
+
+        #result-display {
+            margin-top: 20px; padding: 15px; border-radius: 14px;
+            text-align: center; display: none;
+            position: relative;
+        }
+
+        .scale-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .scale-title {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #374151;
+        }
+
+        .visual-scale-container {
+            width: 100%;
+            height: 15px;
             background: linear-gradient(to right, 
-                #FF0000 0%, #FF4500 7.1%, #FF8C00 14.2%, #FFD700 21.3%, #FFFF00 28.4%, 
-                #ADFF2F 35.5%, #32CD32 42.6%, #00FF00 50%, #00FA9A 57.1%, #00CED1 64.2%, 
-                #1E90FF 71.3%, #0000FF 78.4%, #8A2BE2 85.5%, #4B0082 92.6%, #2E0854 100%
-            ); 
-            border-radius: 15px; 
-            position: relative; 
-            margin: 40px 0 15px 0;
+                #ef4444 0%, #f97316 14.2%, #fbbf24 28.5%, 
+                #10b981 50%, 
+                #3b82f6 71.4%, #6366f1 85.7%, #a855f7 100%);
+            border-radius: 10px;
+            position: relative;
             box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
         }
-        .scale-marker { 
-            position: absolute; 
-            top: -10px; 
-            width: 4px; 
-            height: 50px; 
-            background: #333; 
-            border-radius: 2px; 
-            transform: translateX(-50%); 
-            transition: left 1s ease-in-out; 
+
+        .scale-marker {
+            position: absolute;
+            top: -8px;
+            width: 4px;
+            height: 35px;
+            background: #111827;
+            border-radius: 3px;
+            transition: left 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateX(-50%);
             z-index: 5;
+            box-shadow: 0 0 5px rgba(0,0,0,0.3);
         }
-        .scale-marker::before { 
-            content: attr(data-value); 
-            position: absolute; 
-            top: -30px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            background: #333; 
-            color: white; 
-            padding: 2px 8px; 
-            border-radius: 4px; 
-            font-size: 12px; 
-            white-space: nowrap; 
+
+        .scale-marker::before {
+            content: attr(data-value);
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #111827;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            white-space: nowrap;
         }
+
+        .scale-marker::after {
+            content: '▼';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: #111827;
+            animation: pointBounce 0.8s infinite alternate;
+        }
+
+        .scale-numbers {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            padding: 0 2px;
+        }
+
+        .scale-numbers span {
+            font-size: 10px;
+            font-weight: bold;
+            color: #4b5563;
+        }
+
         .scale-labels {
             display: flex;
             justify-content: space-between;
-            font-size: 12px;
+            margin-top: 4px;
+            padding: 0 2px;
+            font-size: 11px;
             font-weight: bold;
-            color: #555;
-            margin-bottom: 20px;
         }
 
-        .knowledge-section {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 4px solid var(--primary-color);
+        .details-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px;
+            background: rgba(255,255,255,0.3); padding: 8px; border-radius: 8px;
+            font-size: 13px;
         }
-        .knowledge-section h4 { color: #1a73e8; margin-bottom: 10px; font-size: 15px; }
-        .knowledge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; }
-        .k-item { padding: 5px; background: white; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
 
-        .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 15px; background: rgba(0,0,0,0.15); padding: 12px; border-radius: 10px; font-size: 14px; }
-        .acid-bg { background: linear-gradient(135deg, #ff4d4d, #c0392b) !important; }
-        .base-bg { background: linear-gradient(135deg, #7d5fff, #4834d4) !important; }
-        .neutral-bg { background: linear-gradient(135deg, #2ecc71, #27ae60) !important; }
+        .acid-bg { background: var(--acid-color); color: white; }
+        .base-bg { background: var(--base-color); color: white; }
+        .neutral-bg { background: var(--neutral-color); color: white; }
 
-        .extra-info {
+        .creator-tag {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #ffffff;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        #equivalence-info {
             margin-top: 15px;
             padding: 10px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 8px;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        @media (max-width: 1024px) {
-            .sidebar { width: 70px; padding: 10px; }
-            .sidebar h2, .nav-item span { display: none; }
-            .main-content { margin-left: 70px; }
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            font-size: 13px;
+            border: 1px dashed white;
         }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <h2>កម្មវិធីជំនួយគីមី</h2>
-        <ul>
-            <li class="nav-item active" onclick="showCalc('calc1', this)"><span>⚖️ ថ្លឹងសមីការ & គណនាផ្សេង</span></li>
-            <li class="nav-item" onclick="showCalc('calc2', this)"><span>🧪 ម៉ាសម៉ូលេគុល</span></li>
-            <li class="nav-item" onclick="showCalc('calc4', this)"><span>🌡️ គណនា pH នៃសូលុយស្យុង</span></li>
-        </ul>
-    </div>
-
-    <div class="main-content">
-        <div id="calc1" class="calculator-card active">
-            <h2 style="color:#1a73e8; margin-bottom: 20px;">⚖️ ថ្លឹងសមីការ និងគណនា</h2>
-            <div class="input-panel">
-                <input type="text" id="eqInput" class="input-box" placeholder="បញ្ចូលសមីការ (ឧ៖ CaCO3 + HCl = CaCl2 + CO2 + H2O)">
-                <div>
-                    <span style="font-weight: bold;">របៀប:</span>
-                    <select id="calcMode" style="padding: 8px; border-radius: 5px;" onchange="process()">
-                        <option value="normal">គណនាទូទៅ</option>
-                        <option value="limiting">ប្រតិករកំណត់</option>
-                        <option value="yield">គណនាទិន្នផល (Rd)</option>
-                    </select>
-                    <span style="font-weight: bold; margin-left: 10px;">Vm:</span> 
-                    <select id="vmVal" style="padding: 8px; border-radius: 5px;">
-                        <option value="22.4">22.4 L/mol</option>
-                        <option value="24">24 L/mol</option>
-                    </select>
-                    <button class="btn btn-calc" onclick="process()">⚖️ ថ្លឹងនិងគណនា</button>
-                    <button class="btn btn-clear" onclick="clearCalculations()">🧹 សម្អាត</button>
-                </div>
-            </div>
-            <div id="output" style="display:none;">
-                <div id="eqView" class="eq-display"></div>
-                <div style="overflow-x: auto;"><table id="mainTable"><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table></div>
-                <div id="summary" class="summary-box" style="display:none;"></div>
-            </div>
+<div class="main-wrapper">
+    <div class="card">
+        <h2>🧪 គណនា pH នៃសូលុយស្យុងនៅសីតុណ្ហភាព(0-60°C)</h2>
+        
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('single', this)">pH នៃសូលុយស្យុង</button>
+            <button class="tab-btn" onclick="switchTab('reverse', this)">រក [H₃O⁺] និង [OH⁻]</button>
+            <button class="tab-btn" onclick="switchTab('mix', this)">គណនា pH ល្បាយក្រោយអត្រាកម្ម </button>
         </div>
 
-        <div id="calc2" class="calculator-card">
-            <h1>🧪 គណនាម៉ាសម៉ូលេគុល</h1>
-            <input type="text" id="massInput" style="width:100%; padding:10px; margin:15px 0;" placeholder="ឧទាហរណ៍៖ C6H12O6">
-            <button class="btn btn-calc" style="width:100%" onclick="calcMass()">គណនាម៉ាស</button>
-            <div id="massResult" style="margin-top:20px; padding:15px; background:#f8f9fa; border-radius:8px;">ម៉ាសម៉ូលេគុលសរុប៖ -</div>
+        <div class="input-group">
+            <label>សីតុណ្ហភាព (&deg;C)</label>
+            <select id="tempInput" onchange="toggleInputs()">
+                <option value="0">0 °C (pKw = 14.94)</option>
+                <option value="10">10 °C (pKw = 14.53)</option>
+                <option value="20">20 °C (pKw = 14.17)</option>
+                <option value="25" selected>25 °C (pKw = 14.00)</option>
+                <option value="30">30 °C (pKw = 13.83)</option>
+                <option value="40">40 °C (pKw = 13.54)</option>
+                <option value="50">50 °C (pKw = 13.26)</option>
+                <option value="60">60 °C (pKw = 13.02)</option>
+            </select>
         </div>
 
+        <div class="input-group">
+            <label>ជម្រើសលម្អិត</label>
+            <select id="calcType" onchange="toggleInputs()">
+                <option value="h3o" data-tab="single">ម៉ូណូអាស៊ីតខ្លាំង (Cₐ) = [H₃O⁺]</option>
+                <option value="oh" data-tab="single">ម៉ូណូបាសខ្លាំង (Cb) = [OH⁻]</option>
+                <option value="di_acid" data-tab="single">ឌីអាស៊ីតខ្លាំង (Cₐ)</option>
+                <option value="di_base" data-tab="single">ឌីបាសខ្លាំង (Cb)</option>
+                <option value="from_ph" data-tab="reverse">ចេញពីតម្លៃ pH</option>
+                <option value="from_poh" data-tab="reverse">ចេញពីតម្លៃ pOH</option>
+                <option value="mix_m_m" data-tab="mix">ម៉ូណូអាស៊ីតខ្លាំង + ម៉ូណូបាសខ្លាំង</option>
+                <option value="mix_d_m" data-tab="mix">ឌីអាស៊ីតខ្លាំង + ម៉ូណូបាសខ្លាំង</option>
+                <option value="mix_m_d" data-tab="mix">ម៉ូណូអាស៊ីតខ្លាំង + ឌីបាសខ្លាំង</option>
+            </select>
+        </div>
 
-        <div id="calc4" class="calculator-card">
-            <h2 style="color:var(--primary-color)">🧪 គណនា pH នៃសូលុយស្យុង (0-60°C)</h2>
-            <div class="ph-tabs">
-                <button class="ph-tab-btn active" onclick="switchPhTab('single', this)">pH នៃសូលុយស្យុង</button>
-                <button class="ph-tab-btn" onclick="switchPhTab('reverse', this)">រក [H₃O⁺] និង [OH⁻]</button>
-                <button class="ph-tab-btn" onclick="switchPhTab('mix', this)">គណនា pH ល្បាយក្រោយអត្រាកម្ម</button>
+        <div id="singleInputGroup" class="input-group">
+            <label id="inputLabel">កំហាប់ជាម៉ូលេ (mol/L)</label>
+            <input type="number" id="inputVal" step="any" placeholder="បញ្ចូលលេខទីនេះ...">
+        </div>
+
+        <div id="mixtureInputs" class="mixture-inputs">
+            <div><label>កំហាប់អាស៊ីត (mol/L)</label><input type="number" id="ca" step="any"></div>
+            <div><label> មាឌអាស៊ីត (mL)</label><input type="number" id="va" step="any"></div>
+            <div><label>កំហាប់បាស (mol/L)</label><input type="number" id="cb" step="any"></div>
+            <div><label>មាឌបាស (mL)</label><input type="number" id="vb" step="any"></div>
+        </div>
+
+        <button class="calc-action-btn" onclick="processCalculation()">គណនាឥឡូវនេះ</button>
+
+        <div id="result-display">
+            <p id="resStatusText" style="margin:0; font-size: 13px;">លទ្ធផលគឺ</p>
+            <h1 id="resMainValue" style="font-size: 28px; margin: 5px 0;">--</h1> 
+            
+            <div id="resBadge" style="display:inline-block; padding: 3px 12px; border-radius: 15px; background: rgba(0,0,0,0.1); font-size: 13px;">Status</div>
+            
+            <div class="details-grid">
+                <div>[H₃O⁺]: <span id="resH3O"></span></div>
+                <div>[OH⁻]: <span id="resOH"></span></div>
+                <div>pH: <span id="resPH2"></span></div>
+                <div>pOH: <span id="resPOH"></span></div>
             </div>
 
-            <div class="ph-input-group">
-                <label>សីតុណ្ហភាព (&deg;C)</label>
-                <select id="tempInput" class="ph-select" onchange="togglePhInputs()">
-                    <option value="0">0 °C (pKw = 14.94)</option><option value="10">10 °C (pKw = 14.53)</option>
-                    <option value="20">20 °C (pKw = 14.17)</option><option value="25" selected>25 °C (pKw = 14.00)</option>
-                    <option value="30">30 °C (pKw = 13.83)</option><option value="40">40 °C (pKw = 13.54)</option>
-                    <option value="50">50 °C (pKw = 13.26)</option><option value="60">60 °C (pKw = 13.02)</option>
-                </select>
+            <div id="equivalence-info" style="display: none;">
+                <span id="eqText"></span>
             </div>
 
-            <div class="ph-input-group">
-                <label>ជម្រើសលម្អិត</label>
-                <select id="phCalcType" class="ph-select" onchange="togglePhInputs()">
-                    <option value="h3o" data-tab="single">ម៉ូណូអាស៊ីតខ្លាំង (Cₐ) = [H₃O⁺]</option>
-                    <option value="oh" data-tab="single">ម៉ូណូបាសខ្លាំង (Cb) = [OH⁻]</option>
-                    <option value="di_acid" data-tab="single">ឌីអាស៊ីតខ្លាំង (Cₐ)</option>
-                    <option value="di_base" data-tab="single">ឌីបាសខ្លាំង (Cb)</option>
-                    <option value="from_ph" data-tab="reverse">ចេញពីតម្លៃ pH</option>
-                    <option value="from_poh" data-tab="reverse">ចេញពីតម្លៃ pOH</option>
-                    <option value="mix_m_m" data-tab="mix">ម៉ូណូអាស៊ីតខ្លាំង + ម៉ូណូបាសខ្លាំង</option>
-                    <option value="mix_d_m" data-tab="mix">ឌីអាស៊ីតខ្លាំង + ម៉ូណូបាសខ្លាំង</option>
-                    <option value="mix_m_d" data-tab="mix">ម៉ូណូអាស៊ីតខ្លាំង + ឌីបាសខ្លាំង</option>
-                </select>
-            </div>
-
-            <div id="singlePhInputGroup" class="ph-input-group">
-                <label id="phInputLabel">កំហាប់ជាម៉ូលេ (mol/L)</label>
-                <input type="number" id="phInputVal" class="ph-input" step="any" placeholder="បញ្ចូលលេខទីនេះ...">
-            </div>
-
-            <div id="phMixtureInputs" class="mixture-inputs">
-                <div><label>កំហាប់អាស៊ីត (M)</label><input type="number" id="ca" class="ph-input" step="any"></div>
-                <div><label>មាឌអាស៊ីត (mL)</label><input type="number" id="va" class="ph-input" step="any"></div>
-                <div><label>កំហាប់បាស (M)</label><input type="number" id="cb" class="ph-input" step="any"></div>
-                <div><label>មាឌបាស (mL)</label><input type="number" id="vb" class="ph-input" step="any"></div>
-            </div>
-
-            <button class="btn btn-calc" style="width:100%" onclick="processPhCalculation()">គណនាឥឡូវនេះ</button>
-
-            <div id="result-display">
-                <p id="resStatusText" style="margin:0; font-size: 13px; opacity: 0.9;">លទ្ធផលគឺ</p>
-                <h1 id="resMainValue" style="font-size: 45px; margin: 5px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">--</h1> 
-                <div id="resBadge" style="display:inline-block; padding: 5px 20px; border-radius: 20px; background: rgba(255,255,255,0.25); font-size: 14px; font-weight: bold; border: 1px solid rgba(255,255,255,0.4);">Status</div>
-                
-                <div class="details-grid">
-                    <div>[H₃O⁺]: <span id="resH3O" style="font-weight:bold;"></span></div>
-                    <div>[OH⁻]: <span id="resOH" style="font-weight:bold;"></span></div>
-                    <div>pH: <span id="resPH2" style="font-weight:bold;"></span></div>
-                    <div>pOH: <span id="resPOH" style="font-weight:bold;"></span></div>
-                </div>
-                <div id="extra-neutral-info" class="extra-info" style="display:none;"></div>
-            </div>
-
-            <div id="phScaleSection" class="ph-scale-section">
+            <div class="scale-section">
+                <div class="scale-title">មាត្រដ្ឋាន pH (pH Scale)</div>
                 <div class="visual-scale-container">
-                    <div id="scaleMarker" class="scale-marker" style="left: 50%;" data-value="pH 7.00"></div>
+                    <div id="scaleMarker" class="scale-marker" style="left: 50%;" data-value="7.00"></div>
+                </div>
+                <div class="scale-numbers">
+                    <span>0</span><span>2</span><span>4</span><span>6</span><span id="neutralMarker" style="color:var(--primary)">7</span><span>8</span><span>10</span><span>12</span><span>14</span>
                 </div>
                 <div class="scale-labels">
-                    <span>អាស៊ីត </span>
-                    <span id="neutralLabel">ណឺត (7.00)</span>
-                    <span>បាស </span>
-                </div>
-
-                <div class="knowledge-section">
-                    <h4>💡 ចំណេះដឹងបន្ថែម៖ ឧទាហរណ៍ក្នុងធម្មជាតិ</h4>
-                    <div class="knowledge-grid">
-                        <div class="k-item">🍋 ទឹកក្រូចឆ្មារ (pH ≈ 2.0)</div>
-                        <div class="k-item">🍅 ទឹកប៉េងប៉ោះ (pH ≈ 4.0)</div>
-                        <div class="k-item">🥛 ទឹកដោះគោ (pH ≈ 6.5)</div>
-                        <div class="k-item">💧 ទឹកបរិសុទ្ធ (pH ≈ 7.0)</div>
-                        <div class="k-item">🥚 ផ្នែកស៊ុតស (pH ≈ 8.0)</div>
-                        <div class="k-item">🧼 ទឹកសាប៊ូ (pH ≈ 10.0)</div>
-                    </div>
+                    <span style="color:var(--acid-color)">អាស៊ីត</span>
+                    <span style="color:var(--neutral-color)">ណឺត</span>
+                    <span style="color:var(--base-color)">បាស</span>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        const MASSES = {"H":1,"He":4,"Li":7,"Be":9,"B":11,"C":12,"N":14,"O":16,"F":19,"Ne":20,"Na":23,"Mg":24,"Al":27,"Si":28,"P":31,"S":32,"Cl":35.5,"K":39,"Ca":40,"Mn":55,"Fe":56,"Co":59,"Ni":58.7,"Cu":64,"Zn":65,"Ag":108,"Ba":137,"I":127,"Pt":195,"Au":197,"Hg":201,"Pb":207};
-        const pKwData = {0: 14.94, 10: 14.53, 20: 14.17, 25: 14.00, 30: 13.83, 40: 13.54, 50: 13.26, 60: 13.02};
-        let curData = null;
+<div class="creator-tag">បង្កើតដោយ កៀ ឃីម ៖ កម្មវិធីជំនួយការបង្រៀនគីមីវិទ្យា</div>
 
-        function formatScientific(num) {
-            if (num === 0) return "0";
-            let exp = Math.floor(Math.log10(num));
-            let coeff = (num / Math.pow(10, exp)).toFixed(2);
-            return `${coeff} × 10<sup>${exp}</sup>`;
-        }
+<script>
+    const pKwData = {
+        0: 14.94, 10: 14.53, 20: 14.17, 25: 14.00, 30: 13.83, 40: 13.54, 50: 13.26, 60: 13.02
+    };
 
-        function showCalc(id, element) {
-            document.querySelectorAll('.calculator-card').forEach(c => c.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            element.classList.add('active');
-        }
+    function getpKw(temp) {
+        return pKwData[temp] || 14.00;
+    }
 
-        /* --- BALANCER LOGIC --- */
-        function parse(formula) {
-            let stack = [{}], i = 0;
-            while (i < formula.length) {
-                let char = formula[i];
-                if (char === '(') { stack.push({}); i++; }
-                else if (char === ')') {
-                    i++; let mul = ""; while (i < formula.length && /\d/.test(formula[i])) mul += formula[i++];
-                    mul = parseInt(mul) || 1; let top = stack.pop();
-                    for (let a in top) stack[stack.length - 1][a] = (stack[stack.length - 1][a] || 0) + top[a] * mul;
-                } else {
-                    let match = formula.slice(i).match(/^([A-Z][a-z]*)(\d*)/);
-                    if (match) {
-                        let atom = match[1], count = parseInt(match[2]) || 1;
-                        stack[stack.length - 1][atom] = (stack[stack.length - 1][atom] || 0) + count;
-                        i += match[0].length;
-                    } else i++;
-                }
+    window.onload = function() {
+        switchTab('single', document.querySelector('.tab-btn'));
+    };
+
+    function switchTab(tabName, btn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const select = document.getElementById('calcType');
+        const options = select.options;
+        let firstVisible = null;
+        for (let i = 0; i < options.length; i++) {
+            if (options[i].getAttribute('data-tab') === tabName) {
+                options[i].style.display = 'block';
+                if (!firstVisible) firstVisible = options[i].value;
+            } else {
+                options[i].style.display = 'none';
             }
-            return stack[0];
         }
+        select.value = firstVisible;
+        toggleInputs();
+    }
 
-        function solve(formula) {
-            const clean = formula.replace(/\s+/g, ''), sides = clean.split(/[=➞→]|->/);
-            const lhs = sides[0].split('+'), rhs = sides[1].split('+'), all = [...lhs, ...rhs];
-            const elms = new Set(); all.forEach(m => Object.keys(parse(m)).forEach(e => elms.add(e)));
-            const elementList = Array.from(elms);
-            const mat = elementList.map(e => [...lhs.map(m => (parse(m)[e] || 0)), ...rhs.map(m => -(parse(m)[e] || 0))]);
-            const rows = mat.length, cols = mat[0].length;
-            for (let i = 0; i < Math.min(rows, cols); i++) {
-                let pivot = i; for (let j = i + 1; j < rows; j++) if (Math.abs(mat[j][i]) > Math.abs(mat[pivot][i])) pivot = j;
-                [mat[i], mat[pivot]] = [mat[pivot], mat[i]];
-                if (Math.abs(mat[i][i]) < 1e-10) continue;
-                for (let j = 0; j < rows; j++) { if (j !== i) { let f = mat[j][i] / mat[i][i]; for (let k = i; k < cols; k++) mat[j][k] -= f * mat[i][k]; } }
-            }
-            let coefs = new Array(cols).fill(1);
-            for (let i = 0; i < cols - 1; i++) coefs[i] = Math.abs(mat[i][cols - 1] / (mat[i][i] || 1));
-            for (let q = 1; q < 200; q++) {
-                let t = coefs.map(x => Math.round(x * q * 100) / 100);
-                if (t.every(x => Math.abs(x - Math.round(x)) < 0.01)) { coefs = t.map(Math.round); break; }
-            }
-            return { lhs, rhs, coefs, all };
-        }
+    function formatSci(num) {
+        if (num === undefined || isNaN(num)) return "0";
+        if (num >= 0.01 && num <= 100) return num.toFixed(4);
+        let str = num.toExponential(2);
+        let parts = str.split('e');
+        return `${parts[0]} × 10<sup>${parseInt(parts[1])}</sup>`;
+    }
 
-        function getM(m) { let atoms = parse(m), s = 0; for (let a in atoms) s += (MASSES[a] || 0) * atoms[a]; return s; }
+    function toggleInputs() {
+        const type = document.getElementById('calcType').value;
+        const inputLabel = document.getElementById('inputLabel');
+        document.getElementById('singleInputGroup').style.display = type.startsWith('mix') ? 'none' : 'block';
+        document.getElementById('mixtureInputs').style.display = type.startsWith('mix') ? 'grid' : 'none';
         
-        function process() {
-            const val = document.getElementById('eqInput').value;
-            if(!val) return;
-            try { curData = solve(val); renderBalancer(); } catch(e) { alert("សូមពិនិត្យរូបមន្តគីមី!"); }
-        }
+        if(type === 'from_ph') inputLabel.innerText = "បញ្ចូលតម្លៃ pH";
+        else if(type === 'from_poh') inputLabel.innerText = "បញ្ចូលតម្លៃ pOH";
+        else inputLabel.innerText = "កំហាប់ជាម៉ូលេ (mol/L)";
+        document.getElementById('equivalence-info').style.display = 'none';
+    }
 
-        function renderBalancer() {
-            const mode = document.getElementById('calcMode').value;
-            document.getElementById('output').style.display = 'block';
-            const head = document.getElementById('tableHead'), body = document.getElementById('tableBody');
-            let hHtml = `<tr><th style="width:180px">ព័ត៌មាន</th>`;
-            curData.all.forEach(m => hHtml += `<th>${m.replace(/(\d+)/g, '<sub>$1</sub>')}</th>`);
-            head.innerHTML = hHtml + `</tr>`;
-            let rows = mode === 'limiting' ? [{label:"មេគុណ",id:"coef"},{label:"M",id:"M"},{label:"m (g)",id:"m_in"},{label:"n (mol)",id:"n_in"},{label:"Ratio",id:"ratio"},{label:"n_re",id:"n_re"},{label:"Final m",id:"m_final"}] : [{label:"មេគុណ",id:"coef"},{label:"M",id:"M"},{label:"n (mol)",id:"n"},{label:"m (g)",id:"m"}];
-            body.innerHTML = '';
-            rows.forEach(r => {
-                let rHtml = `<tr><td class="row-label">${r.label}</td>`;
-                curData.all.forEach((m, i) => {
-                    if(r.id==="coef") rHtml += `<td>${curData.coefs[i]}</td>`;
-                    else if(r.id==="M") rHtml += `<td>${getM(m).toLocaleString()}</td>`;
-                    else if(r.id.includes("_in") || r.id==="n" || r.id==="m") rHtml += `<td><input type="number" class="calc-input" id="${r.id}_${i}" oninput="runBalCalc(${i},'${r.id}')"></td>`;
-                    else rHtml += `<td id="${r.id}_${i}">-</td>`;
-                });
-                body.innerHTML += rHtml + `</tr>`;
-            });
-            let l = curData.lhs.map((m,i)=>(curData.coefs[i]>1?curData.coefs[i]:"") + m).join(' + ');
-            let r = curData.rhs.map((m,i)=>(curData.coefs[i+curData.lhs.length]>1?curData.coefs[i+curData.lhs.length]:"") + m).join(' + ');
-            document.getElementById('eqView').innerHTML = l + " <span class='arrow'>→</span> " + r;
-        }
+    function processCalculation() {
+        const type = document.getElementById('calcType').value;
+        const temp = parseFloat(document.getElementById('tempInput').value);
+        const pKw = getpKw(temp);
+        const neutralPoint = pKw / 2;
+        
+        let ph, h3o, oh, poh;
+        const eqInfo = document.getElementById('equivalence-info');
+        const eqText = document.getElementById('eqText');
+        eqInfo.style.display = 'none';
 
-        function calcMass() {
-            const formula = document.getElementById('massInput').value;
-            try {
-                let atoms = parse(formula), total = 0;
-                for (let a in atoms) total += (MASSES[a] || 0) * atoms[a];
-                document.getElementById('massResult').innerHTML = `ម៉ាសម៉ូលេគុលសរុប៖ <b>${total.toLocaleString()} g/mol</b>`;
-            } catch(e) { alert("រូបមន្តខុស!"); }
-        }
-
-        function clearCalculations() {
-            document.querySelectorAll('.calc-input').forEach(i => i.value = '');
-            document.querySelectorAll('td[id]').forEach(i => i.innerText = '-');
-        }
-
-        /* --- pH LOGIC --- */
-        function animateValue(obj, start, end, duration) {
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                obj.innerHTML = (progress * (end - start) + start).toFixed(2);
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                }
-            };
-            window.requestAnimationFrame(step);
-        }
-
-        function switchPhTab(tabName, btn) {
-            document.querySelectorAll('.ph-tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            const select = document.getElementById('phCalcType');
-            for (let opt of select.options) {
-                opt.style.display = opt.getAttribute('data-tab') === tabName ? 'block' : 'none';
-            }
-            select.value = [...select.options].find(o => o.style.display === 'block').value;
-            togglePhInputs();
-        }
-
-        function togglePhInputs() {
-            const type = document.getElementById('phCalcType');
-            if(!type) return;
-            document.getElementById('singlePhInputGroup').style.display = type.value.startsWith('mix') ? 'none' : 'block';
-            document.getElementById('phMixtureInputs').style.display = type.value.startsWith('mix') ? 'grid' : 'none';
-            document.getElementById('phInputLabel').innerText = type.value.includes('from') ? "តម្លៃ pH/pOH" : "កំហាប់ (mol/L)";
-        }
-
-        function processPhCalculation() {
-            const type = document.getElementById('phCalcType').value;
-            const temp = parseFloat(document.getElementById('tempInput').value);
-            const pKw = pKwData[temp] || 14.00;
-            const neutral = pKw / 2;
-            let ph, h3o, oh, poh;
-            let infoText = "";
-
-            if (type.startsWith('mix')) {
-                const Ca = parseFloat(document.getElementById('ca').value) || 0;
-                const Va = parseFloat(document.getElementById('va').value) || 0;
-                const Cb = parseFloat(document.getElementById('cb').value) || 0;
-                const Vb = parseFloat(document.getElementById('vb').value) || 0;
-                
-                let valencyA = (type === 'mix_d_m' ? 2 : 1);
-                let valencyB = (type === 'mix_m_d' ? 2 : 1);
-                
-                let na = valencyA * Ca * (Va/1000);
-                let nb = valencyB * Cb * (Vb/1000);
-                let Vt = (Va + Vb)/1000;
-
-                if (na > nb) { h3o = (na-nb)/Vt; ph = -Math.log10(h3o); }
-                else if (nb > na) { oh = (nb-na)/Vt; poh = -Math.log10(oh); ph = pKw - poh; }
-                else ph = neutral;
-
-                if (na > nb && Cb > 0) {
-                    let vbNeeded = (na / (valencyB * (Cb/1000))) - Vb;
-                    infoText = `ដើម្បីឱ្យសូលុយស្យុងណឺត (pH=${neutral.toFixed(2)}) អ្នកត្រូវថែមបាស <b>${vbNeeded.toLocaleString(undefined, {maximumFractionDigits:2})} mL</b> ទៀត។`;
-                } else if (nb > na && Ca > 0) {
-                    let vaNeeded = (nb / (valencyA * (Ca/1000))) - Va;
-                    infoText = `ដើម្បីឱ្យសូលុយស្យុងណឺត (pH=${neutral.toFixed(2)}) អ្នកត្រូវថែមអាស៊ីត <b>${vaNeeded.toLocaleString(undefined, {maximumFractionDigits:2})} mL</b> ទៀត។`;
-                } else if (na === nb && na > 0) {
-                    infoText = "សូលុយស្យុងគឺណឺតស្រាប់ហើយ។";
-                }
-            } else {
-                const C = parseFloat(document.getElementById('phInputVal').value) || 0;
-                if (type === 'h3o') ph = -Math.log10(C);
-                else if (type === 'di_acid') ph = -Math.log10(2*C);
-                else if (type === 'oh') ph = pKw - (-Math.log10(C));
-                else if (type === 'di_base') ph = pKw - (-Math.log10(2*C));
-                else if (type === 'from_ph') ph = C;
-                else if (type === 'from_poh') ph = pKw - C;
-            }
-
-            if(isNaN(ph) || ph === Infinity || ph === -Infinity) ph = neutral;
-
-            h3o = Math.pow(10, -ph);
-            poh = pKw - ph;
-            oh = Math.pow(10, -poh);
-
-            // Update UI
-            document.getElementById('result-display').style.display = 'block';
-            document.getElementById('phScaleSection').style.display = 'block';
-            document.getElementById('result-display').className = ph < neutral - 0.1 ? 'acid-bg' : (ph > neutral + 0.1 ? 'base-bg' : 'neutral-bg');
+        if (type.startsWith('mix')) {
+            const Ca = parseFloat(document.getElementById('ca').value);
+            const Va = parseFloat(document.getElementById('va').value);
+            const Cb = parseFloat(document.getElementById('cb').value);
+            const Vb = parseFloat(document.getElementById('vb').value);
+            if ([Ca, Va, Cb, Vb].some(isNaN)) { alert("សូមបញ្ចូលលេខឱ្យគ្រប់!"); return; }
             
-            animateValue(document.getElementById('resMainValue'), 0, ph, 1000);
-            document.getElementById('resH3O').innerHTML = formatScientific(h3o);
-            document.getElementById('resOH').innerHTML = formatScientific(oh);
-            document.getElementById('resPH2').innerText = ph.toFixed(2);
-            document.getElementById('resPOH').innerText = poh.toFixed(2);
-            document.getElementById('resBadge').innerText = ph < neutral - 0.1 ? "អាស៊ីត (Acidic)" : (ph > neutral + 0.1 ? "បាស (Basic)" : "ណឺត (Neutral)");
-            
-            // Marker Position
-            let pos = (ph / 14) * 100;
-            const marker = document.getElementById('scaleMarker');
-            marker.style.left = Math.max(0, Math.min(100, pos)) + "%";
-            marker.setAttribute('data-value', "pH " + ph.toFixed(2));
-            
-            // Neutral Label Update
-            document.getElementById('neutralLabel').innerText = `ណឺត (${neutral.toFixed(2)})`;
+            let na_fact = (type === 'mix_d_m') ? 2 : 1;
+            let nb_fact = (type === 'mix_m_d') ? 2 : 1;
+            let nH = na_fact * Ca * (Va/1000);
+            let nOH = nb_fact * Cb * (Vb/1000);
+            let Vtotal = (Va + Vb) / 1000;
 
-            const extraInfo = document.getElementById('extra-neutral-info');
-            if (infoText) {
-                extraInfo.style.display = 'block';
-                extraInfo.innerHTML = infoText;
-            } else {
-                extraInfo.style.display = 'none';
+            if (nH > nOH) {
+                h3o = (nH - nOH) / Vtotal;
+                ph = -Math.log10(h3o);
+                // គណនាមាឌបាសត្រូវថែមដល់សមមូល: nb*Cb*Vbe = na*Ca*Va
+                let Vbe = (na_fact * Ca * Va) / (nb_fact * Cb);
+                let Vadd = Vbe - Vb;
+                eqInfo.style.display = 'block';
+                eqText.innerHTML = `ដើម្បីដល់ចំណុចសមមូល ត្រូវបន្ថែមបាសមាឌ៖ <b>${Vadd.toFixed(2)} mL</b>`;
+            } else if (nOH > nH) {
+                oh = (nOH - nH) / Vtotal;
+                poh = -Math.log10(oh);
+                ph = pKw - poh;
+                // គណនាមាឌអាស៊ីតត្រូវថែមដល់សមមូល: na*Ca*Vae = nb*Cb*Vb
+                let Vae = (nb_fact * Cb * Vb) / (na_fact * Ca);
+                let Vadd = Vae - Va;
+                eqInfo.style.display = 'block';
+                eqText.innerHTML = `ដើម្បីដល់ចំណុចសមមូល ត្រូវបន្ថែមអាស៊ីតមាឌ៖ <b>${Vadd.toFixed(2)} mL</b>`;
+            } else { 
+                ph = neutralPoint; 
+                eqInfo.style.display = 'block';
+                eqText.innerHTML = `ល្បាយស្ថិតក្នុងចំណុចសមមូលរួចជាស្រេច!`;
             }
+        } else {
+            const C = parseFloat(document.getElementById('inputVal').value);
+            if (isNaN(C)) { alert("សូមបញ្ចូលតម្លៃ!"); return; }
+            if(type === 'h3o') { h3o = C; ph = -Math.log10(h3o); } 
+            else if(type === 'di_acid') { h3o = 2 * C; ph = -Math.log10(h3o); } 
+            else if(type === 'oh') { oh = C; poh = -Math.log10(oh); ph = pKw - poh; } 
+            else if(type === 'di_base') { oh = 2 * C; poh = -Math.log10(oh); ph = pKw - poh; } 
+            else if(type === 'from_ph') { ph = C; } 
+            else if(type === 'from_poh') { ph = pKw - C; }
         }
-    </script>
+
+        poh = pKw - ph;
+        h3o = Math.pow(10, -ph);
+        oh = Math.pow(10, -poh);
+
+        displayResult(ph, poh, h3o, oh, type, neutralPoint);
+    }
+
+    function displayResult(ph, poh, h3o, oh, type, neutralPoint) {
+        const display = document.getElementById('result-display');
+        const marker = document.getElementById('scaleMarker');
+        const resMain = document.getElementById('resMainValue');
+
+        if(type === 'from_poh') resMain.innerHTML = formatSci(oh);
+        else if(type === 'from_ph') resMain.innerHTML = formatSci(h3o);
+        else resMain.innerText = ph.toFixed(2);
+
+        document.getElementById('resPH2').innerText = ph.toFixed(2);
+        document.getElementById('resPOH').innerText = poh.toFixed(2);
+        document.getElementById('resH3O').innerHTML = formatSci(h3o);
+        document.getElementById('resOH').innerHTML = formatSci(oh);
+        document.getElementById('neutralMarker').innerText = neutralPoint.toFixed(1);
+        
+        let pos = (ph / 14) * 100;
+        pos = Math.max(0, Math.min(100, pos));
+        marker.style.left = pos + "%";
+        marker.setAttribute('data-value', "pH " + ph.toFixed(2));
+
+        display.style.display = 'block';
+
+        if (ph < neutralPoint - 0.02) {
+            display.className = 'acid-bg';
+            document.getElementById('resBadge').innerText = "អាស៊ីត (Acid)";
+        } else if (ph > neutralPoint + 0.02) {
+            display.className = 'base-bg';
+            document.getElementById('resBadge').innerText = "បាស (Base)";
+        } else {
+            display.className = 'neutral-bg';
+            document.getElementById('resBadge').innerText = "ណឺត (Neutral)";
+        }
+    }
+</script>
 </body>
 </html>
