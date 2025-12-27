@@ -23,17 +23,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 10px; /* Reduced padding */
+            padding: 10px;
             color: #1f2937;
             flex-direction: column; 
         }
 
-        .main-wrapper { width: 100%; max-width: 600px; /* Reduced max-width for compactness */ }
+        .main-wrapper { width: 100%; max-width: 600px; }
 
         .card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            padding: 20px; /* Reduced padding */
+            padding: 20px;
             border-radius: 20px;
             box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2);
             margin-bottom: 15px;
@@ -41,7 +41,7 @@
 
         h2 { 
             text-align: center; margin-top: 0; margin-bottom: 15px; 
-            color: var(--primary); font-size: 18px; /* Smaller font */
+            color: var(--primary); font-size: 18px;
         }
 
         .tabs {
@@ -55,14 +55,14 @@
 
         .tab-btn {
             flex: 1;
-            padding: 8px 5px; /* Compact padding */
+            padding: 8px 5px;
             border: none;
             background: none;
             cursor: pointer;
             border-radius: 8px;
             font-family: 'Kantumruy Pro';
             font-weight: 600;
-            font-size: 12px; /* Smaller font */
+            font-size: 12px;
             color: #4b5563;
             transition: 0.3s;
         }
@@ -73,11 +73,11 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .input-group { margin-bottom: 12px; /* Reduced margin */ }
+        .input-group { margin-bottom: 12px; }
         label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 13px; color: #4b5563; }
 
         select, input {
-            width: 100%; padding: 8px 12px; /* Compact inputs */
+            width: 100%; padding: 8px 12px;
             border: 2px solid #e5e7eb;
             border-radius: 10px; font-size: 14px; outline: none; box-sizing: border-box;
             background: white;
@@ -101,7 +101,6 @@
             position: relative;
         }
 
-        /* --- Compact Visual pH Scale --- */
         .scale-section {
             margin-top: 20px;
             padding: 15px;
@@ -119,7 +118,7 @@
 
         .visual-scale-container {
             width: 100%;
-            height: 15px; /* Thinner bar */
+            height: 15px;
             background: linear-gradient(to right, 
                 #ef4444 0%, #f97316 14.2%, #fbbf24 28.5%, 
                 #10b981 50%, 
@@ -132,8 +131,8 @@
         .scale-marker {
             position: absolute;
             top: -8px;
-            width: 4px; /* Thinner marker */
-            height: 35px; /* Shorter marker */
+            width: 4px;
+            height: 35px;
             background: #111827;
             border-radius: 3px;
             transition: left 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -145,7 +144,7 @@
         .scale-marker::before {
             content: attr(data-value);
             position: absolute;
-            top: -25px; /* Adjusted position */
+            top: -25px;
             left: 50%;
             transform: translateX(-50%);
             background: #111827;
@@ -188,7 +187,6 @@
             font-size: 11px;
             font-weight: bold;
         }
-        /* ----------------------------------------- */
 
         .details-grid {
             display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px;
@@ -207,13 +205,22 @@
             font-weight: bold;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
+
+        #equivalence-info {
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            font-size: 13px;
+            border: 1px dashed white;
+        }
     </style>
 </head>
 <body>
 
 <div class="main-wrapper">
     <div class="card">
-        <h2>🧪 គណនា pH នៃសូលុយស្យុងនៅសីតុណ្ហភាព</h2>
+        <h2>🧪 គណនា pH នៃសូលុយស្យុងនៅសីតុណ្ហភាព(0-60°C)</h2>
         
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('single', this)">pH នៃសូលុយស្យុង</button>
@@ -265,7 +272,7 @@
         <button class="calc-action-btn" onclick="processCalculation()">គណនាឥឡូវនេះ</button>
 
         <div id="result-display">
-            <p id="resStatusText" style="margin:0; font-size: 13px;">លទ្ធផលគណនាគឺ</p>
+            <p id="resStatusText" style="margin:0; font-size: 13px;">លទ្ធផលគឺ</p>
             <h1 id="resMainValue" style="font-size: 28px; margin: 5px 0;">--</h1> 
             
             <div id="resBadge" style="display:inline-block; padding: 3px 12px; border-radius: 15px; background: rgba(0,0,0,0.1); font-size: 13px;">Status</div>
@@ -275,6 +282,10 @@
                 <div>[OH⁻]: <span id="resOH"></span></div>
                 <div>pH: <span id="resPH2"></span></div>
                 <div>pOH: <span id="resPOH"></span></div>
+            </div>
+
+            <div id="equivalence-info" style="display: none;">
+                <span id="eqText"></span>
             </div>
 
             <div class="scale-section">
@@ -290,10 +301,6 @@
                     <span style="color:var(--neutral-color)">ណឺត</span>
                     <span style="color:var(--base-color)">បាស</span>
                 </div>
-            </div>
-
-            <div id="titration-info" style="margin-top: 15px; font-weight: bold; border-top: 1px solid rgba(255,255,255,0.5); padding-top: 10px; display: none; font-size: 13px;">
-                <span id="titrationMsg"></span>
             </div>
         </div>
     </div>
@@ -349,7 +356,7 @@
         if(type === 'from_ph') inputLabel.innerText = "បញ្ចូលតម្លៃ pH";
         else if(type === 'from_poh') inputLabel.innerText = "បញ្ចូលតម្លៃ pOH";
         else inputLabel.innerText = "កំហាប់ជាម៉ូលេ (mol/L)";
-        document.getElementById('titration-info').style.display = 'none';
+        document.getElementById('equivalence-info').style.display = 'none';
     }
 
     function processCalculation() {
@@ -359,6 +366,9 @@
         const neutralPoint = pKw / 2;
         
         let ph, h3o, oh, poh;
+        const eqInfo = document.getElementById('equivalence-info');
+        const eqText = document.getElementById('eqText');
+        eqInfo.style.display = 'none';
 
         if (type.startsWith('mix')) {
             const Ca = parseFloat(document.getElementById('ca').value);
@@ -376,12 +386,24 @@
             if (nH > nOH) {
                 h3o = (nH - nOH) / Vtotal;
                 ph = -Math.log10(h3o);
+                // គណនាមាឌបាសត្រូវថែមដល់សមមូល: nb*Cb*Vbe = na*Ca*Va
+                let Vbe = (na_fact * Ca * Va) / (nb_fact * Cb);
+                let Vadd = Vbe - Vb;
+                eqInfo.style.display = 'block';
+                eqText.innerHTML = `ដើម្បីដល់ចំណុចសមមូល ត្រូវបន្ថែមបាសមាឌ៖ <b>${Vadd.toFixed(2)} mL</b>`;
             } else if (nOH > nH) {
                 oh = (nOH - nH) / Vtotal;
                 poh = -Math.log10(oh);
                 ph = pKw - poh;
+                // គណនាមាឌអាស៊ីតត្រូវថែមដល់សមមូល: na*Ca*Vae = nb*Cb*Vb
+                let Vae = (nb_fact * Cb * Vb) / (na_fact * Ca);
+                let Vadd = Vae - Va;
+                eqInfo.style.display = 'block';
+                eqText.innerHTML = `ដើម្បីដល់ចំណុចសមមូល ត្រូវបន្ថែមអាស៊ីតមាឌ៖ <b>${Vadd.toFixed(2)} mL</b>`;
             } else { 
                 ph = neutralPoint; 
+                eqInfo.style.display = 'block';
+                eqText.innerHTML = `ល្បាយស្ថិតក្នុងចំណុចសមមូលរួចជាស្រេច!`;
             }
         } else {
             const C = parseFloat(document.getElementById('inputVal').value);
