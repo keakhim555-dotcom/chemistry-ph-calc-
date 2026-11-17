@@ -3,896 +3,1072 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ពិសោធន៍៖ លក្ខណៈរបស់អាស៊ីដ (ថ្នាក់ទី១២)</title>
-    <!-- ទាញយក Tailwind CSS -->
+    <title>ពិសោធន៍គីមីវិទ្យា៖ កត្តាកំហាប់អង្គធាតុប្រតិករ (IBL)</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- ទាញយកពុម្ពអក្សរខ្មែរ Google Fonts -->
+    <!-- Google Fonts: Kantumruy Pro & Battambang for clean Khmer typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Moul&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Tone.js for subtle sound effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
     <style>
         body {
+            font-family: 'Kantumruy Pro', 'Battambang', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .khmer-heading {
             font-family: 'Kantumruy Pro', sans-serif;
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
         }
-        .title-font {
-            font-family: 'Moul', serif;
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
-        .lab-viewport {
-            background: radial-gradient(circle at 50% 30%, #1e293b 0%, #0f172a 70%, #020617 100%);
-            box-shadow: inset 0 2px 20px rgba(0, 0, 0, 0.65);
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
         }
-        .lab-grid {
-            background-image: 
-                linear-gradient(to right, rgba(148, 163, 184, 0.05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
-            background-size: 24px 24px;
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Print styles for Lesson Plan & Worksheet */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-area, #printable-area * {
+                visibility: visible;
+            }
+            #printable-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .no-print {
+                display: none !important;
+            }
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-2.5 sm:p-6 text-slate-800">
+<body class="min-h-screen flex flex-col">
 
-    <!-- កាតមេសម្រាប់កម្មវិធីពិសោធន៍ -->
-    <div class="w-full max-w-3xl bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-200/80">
-        
-        <!-- ផ្នែកក្បាល (Header) -->
-        <div class="pt-5 pb-4 px-5 text-center bg-gradient-to-b from-rose-50/80 to-white border-b border-slate-100">
-            <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-rose-100/80 text-rose-800 text-xs font-semibold mb-2 border border-rose-200/60">
-                <span class="w-2 h-2 rounded-full bg-rose-600 animate-pulse"></span>
-                គីមីវិទ្យា ថ្នាក់ទី១២ • ជំពូកទី១ មេរៀនទី១៖ ទ្រឹស្ដីអាស៊ីដ-បាស
-            </div>
-            <h1 class="title-font text-xl sm:text-2xl md:text-3xl text-rose-900 leading-relaxed tracking-wide">
-                មន្ទីរពិសោធន៍និម្មិត៖ លក្ខណៈរបស់អាស៊ីដ
-            </h1>
-        </div>
-
-        <!-- របារជ្រើសរើសពិសោធន៍ទាំង ៣ (Tabs) -->
-        <div class="px-4 pt-3 pb-2 bg-white">
-            <div class="grid grid-cols-3 bg-slate-100/90 p-1.5 rounded-2xl gap-1.5 border border-slate-200/60">
-                <button id="tab1Btn" class="py-2.5 px-2 sm:px-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 shadow-sm bg-white text-rose-800 flex flex-col sm:flex-row items-center justify-center gap-1.5">
-                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-rose-100 text-rose-800 text-[11px] font-bold">១</span>
-                    <span class="text-center leading-tight">pH & អង្គធាតុចង្អុល</span>
-                </button>
-                <button id="tab2Btn" class="py-2.5 px-2 sm:px-3 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 text-slate-600 hover:text-slate-900 hover:bg-white/60 flex flex-col sm:flex-row items-center justify-center gap-1.5">
-                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-[11px] font-bold">២</span>
-                    <span class="text-center leading-tight">ប្រតិកម្មគីមី</span>
-                </button>
-                <button id="tab3Btn" class="py-2.5 px-2 sm:px-3 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 text-slate-600 hover:text-slate-900 hover:bg-white/60 flex flex-col sm:flex-row items-center justify-center gap-1.5">
-                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-[11px] font-bold">៣</span>
-                    <span class="text-center leading-tight">ចរន្ត & លក្ខណៈរូប</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- ផ្នែកបង្ហាញការពិសោធន៍ (Canvas Viewport) -->
-        <div class="px-4 py-2 bg-white">
-            <div class="relative w-full rounded-2xl overflow-hidden lab-viewport border border-slate-700">
-                <div class="lab-grid w-full h-full">
-                    <div class="absolute top-3 right-3 z-10 flex items-center gap-2">
-                        <button id="resetBtn" title="ចាប់ផ្តើមឡើងវិញ" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/15 transition active:scale-95 flex items-center gap-1.5 text-xs font-medium">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                            </svg>
-                            <span class="hidden sm:inline">សារឡើងវិញ</span>
-                        </button>
+    <!-- Header Navigation -->
+    <header class="bg-gradient-to-r from-emerald-700 via-teal-700 to-cyan-800 text-white shadow-lg sticky top-0 z-50 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="bg-white/20 p-2.5 rounded-xl backdrop-blur-sm">
+                        <i data-lucide="flask-conical" class="w-7 h-7 text-yellow-300"></i>
                     </div>
-                    <canvas id="simCanvas" class="w-full block cursor-pointer"></canvas>
+                    <div>
+                        <h1 class="text-lg sm:text-xl font-bold tracking-wide khmer-heading">គីមីវិទ្យា ថ្នាក់ទី១២ ៖ កត្តាកំហាប់អង្គធាតុប្រតិករ</h1>
+                        <p class="text-xs sm:text-sm text-emerald-100">វិធីសាស្ត្របង្រៀនតាមបែបរិះរក (IBL • ៤៥ នាទី) • ពិសោធន៍សំបកពងមាន់ &amp; ទឹកក្រូចឆ្មា</p>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- ================= ផ្ទាំងបញ្ជាទី១៖ pH & អង្គធាតុចង្អុល ================= -->
-        <div id="exp1Controls" class="px-4 pb-5 pt-2 space-y-3.5 bg-white">
-            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80">
-                <div class="flex items-center justify-between text-xs font-semibold text-slate-600 mb-2">
-                    <span>មាត្រដ្ឋាន pH នៅ 25°C (១ ដល់ ១៤)</span>
-                    <span id="activePhBadge" class="px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 text-[11px] font-bold">មិនទាន់វាស់</span>
-                </div>
-                <div class="grid grid-cols-7 sm:grid-cols-14 gap-1.5 text-center text-xs font-bold text-white" id="phScaleGrid"></div>
-                <div class="flex justify-between text-[11px] font-medium text-slate-500 mt-1.5 px-1">
-                    <span>← អាស៊ីដ (pH &lt; 7)</span>
-                    <span>ណឺត (7)</span>
-                    <span>បាស (pH &gt; 7) →</span>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">១. ជ្រើសរើសសូលុយស្យុង៖</label>
-                    <select id="sampleSelect" class="w-full bg-white border border-slate-300 text-slate-800 font-semibold py-2.5 px-3 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-rose-600">
-                        <option value="lemon">ទឹកក្រូចឆ្មា (pH ≈ 2)</option>
-                        <option value="vinegar">ទឹកខ្មេះ CH₃COOH (pH ≈ 3)</option>
-                        <option value="hcl">សូលុយស្យុង HCl រាវ (pH ≈ 1)</option>
-                        <option value="water">ទឹកសុទ្ធ (pH = 7)</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">២. ជ្រើសរើសអង្គធាតុចង្អុល៖</label>
-                    <select id="indicatorSelect" class="w-full bg-white border border-slate-300 text-slate-800 font-semibold py-2.5 px-3 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-rose-600">
-                        <option value="ph">ក្រដាស pH សកល</option>
-                        <option value="litmus">ក្រដាសទួណឺសុលពណ៌ខៀវ</option>
-                        <option value="helianthin">ហេល្យ៉ង់ទីន (Helianthin)</option>
-                    </select>
-                </div>
-            </div>
-
-            <button id="dipBtn" class="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-rose-700 to-rose-600 hover:from-rose-800 hover:to-rose-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-rose-700/20 transition active:scale-[0.98]">
-                🧪 ជ្រលក់ក្រដាសតេស្តសង្កេតពណ៌
-            </button>
-
-            <div id="exp1Observation" class="p-4 rounded-2xl bg-rose-50/70 border border-rose-200/70 text-xs sm:text-sm text-slate-700 leading-relaxed flex gap-3 items-start">
-                <span class="text-lg leading-none mt-0.5">💡</span>
-                <div>
-                    <span class="font-bold text-rose-900">សំណួរសង្កេត៖</span> សាកល្បងជ្រលក់ក្រដាសតេស្តក្នុងសូលុយស្យុងអាស៊ីដ និងទឹកសុទ្ធ។ តើក្រដាសប្រែពណ៌យ៉ាងដូចម្តេច? តើតម្លៃ pH របស់អាស៊ីដស្ថិតនៅចន្លោះណា?
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= ផ្ទាំងបញ្ជាទី២៖ ប្រតិកម្មគីមី ================= -->
-        <div id="exp2Controls" class="hidden px-4 pb-5 pt-2 space-y-3.5 bg-white">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">ជ្រើសរើសសារធាតុដាក់ចូលកែវអាស៊ីដ (HCl)៖</label>
-                    <select id="reagentSelect" class="w-full bg-white border border-slate-300 text-slate-800 font-semibold py-2.5 px-3 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-rose-600">
-                        <option value="zn">លោហៈស័ង្កសី (Zn) — លោហៈសកម្ម</option>
-                        <option value="mg">លោហៈម៉ាញ៉េស្យូម (Mg) — លោហៈសកម្ម</option>
-                        <option value="caco3">សំបកពងមាន់ (CaCO₃) — កាបូណាត</option>
-                        <option value="naoh">សូលុយស្យុងបាស (NaOH) — ប្រតិកម្មបន្សាប</option>
-                        <option value="cuo">អុកស៊ីតទង់ដែង (CuO) — អុកស៊ីតបាស</option>
-                    </select>
-                </div>
-                <div class="flex items-end">
-                    <button id="addReagentBtn" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-700 hover:to-rose-700 text-white font-bold text-xs sm:text-sm shadow-md transition active:scale-[0.98]">
-                        ⚗️ ទម្លាក់សារធាតុ និងសង្កេតប្រតិកម្ម
+                <!-- Navigation Tabs -->
+                <nav class="flex flex-wrap gap-1.5 bg-black/20 p-1.5 rounded-xl backdrop-blur-sm">
+                    <button onclick="switchTab('lab')" id="tab-lab" class="tab-btn active flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all bg-white text-teal-800 shadow">
+                        <i data-lucide="beaker" class="w-4 h-4"></i>
+                        <span>ពិសោធន៍និម្មិត</span>
                     </button>
-                </div>
-            </div>
 
-            <div id="exp2Observation" class="p-4 rounded-2xl bg-rose-50/70 border border-rose-200/70 text-xs sm:text-sm text-slate-700 leading-relaxed flex gap-3 items-start">
-                <span class="text-lg leading-none mt-0.5">💡</span>
-                <div>
-                    <span class="font-bold text-rose-900">សំណួរសង្កេត៖</span> ករណីណាខ្លះភាយពពុះឧស្ម័ន? ករណីណាខ្លះបង្កើតជាអំបិល និងទឹក?
-                </div>
-            </div>
-        </div>
 
-        <!-- ================= ផ្ទាំងបញ្ជាទី៣៖ ចរន្ត & លក្ខណៈរូប ================= -->
-        <div id="exp3Controls" class="hidden px-4 pb-5 pt-2 space-y-3.5 bg-white">
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                <button id="btnPureWater" class="py-2.5 px-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs shadow transition active:scale-[0.98]">
-                    💧 តេស្តទឹកសុទ្ធ
-                </button>
-                <button id="btnStrongAcid" class="py-2.5 px-3 rounded-xl bg-rose-700 hover:bg-rose-800 text-white font-bold text-xs shadow transition active:scale-[0.98]">
-                    ⚡ តេស្ត HCl ក្នុងទឹក
-                </button>
-                <button id="btnCorrosive" class="py-2.5 px-3 rounded-xl bg-amber-700 hover:bg-amber-800 text-white font-bold text-xs shadow transition active:scale-[0.98]">
-                    ⚠️ តេស្តកាត់សាច់ & រសជាតិ
-                </button>
-            </div>
 
-            <div id="exp3Observation" class="p-4 rounded-2xl bg-rose-50/70 border border-rose-200/70 text-xs sm:text-sm text-slate-700 leading-relaxed flex gap-3 items-start">
-                <span class="text-lg leading-none mt-0.5">💡</span>
-                <div>
-                    <span class="font-bold text-rose-900">សំណួរសង្កេត៖</span> ហេតុអ្វីបានជាសូលុយស្យុងអាស៊ីដអាចចម្លងចរន្តអគ្គិសនីបាន? តើអាស៊ីដមានរសជាតិ និងឥទ្ធិពលលើសម្លៀកបំពាក់/ស្បែកយ៉ាងដូចម្តេច?
-                </div>
+                    <button onclick="switchTab('analysis')" id="tab-analysis" class="tab-btn flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all text-white hover:bg-white/15"><i data-lucide="chart-line" class="w-4 h-4"></i><span>ទិន្នន័យ/ក្រាហ្វ</span></button>
+                    <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all text-white hover:bg-white/15"><i data-lucide="clipboard-check" class="w-4 h-4"></i><span>សំណួរតេស្ត</span></button>
+                    <button onclick="switchTab('report')" id="tab-report" class="tab-btn flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all text-white hover:bg-white/15"><i data-lucide="file-output" class="w-4 h-4"></i><span>របាយការណ៍</span></button>
+                </nav>
             </div>
         </div>
-    </div>
+    </header>
 
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ========================================== -->
+        <!-- TAB 1: INTERACTIVE VIRTUAL LAB             -->
+        <!-- ========================================== -->
+        <section id="view-lab" class="tab-view space-y-6">
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <!-- Simulation Control & Canvas Card (7 cols) -->
+                <div class="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="bg-gradient-to-r from-slate-50 to-teal-50/60 border-b border-slate-200 px-5 py-3.5 flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <h2 class="font-bold text-slate-800 text-sm sm:text-base">បន្ទប់ពិសោធន៍និម្មិត ៖ សំបកពងមាន់ &amp; ទឹកក្រូចឆ្មា (ប្រើប៉េងប៉ោង)</h2>
+                        </div>
+                        <div class="flex items-center gap-2 bg-slate-900 text-emerald-400 px-3 py-1 rounded-lg font-mono text-xs sm:text-sm shadow-inner">
+                            <i data-lucide="timer" class="w-4 h-4"></i>
+                            <span id="timer-display">00:00 / 02:00 នាទី</span>
+                        </div>
+                    </div>
+
+                    <!-- Simulation Canvas Area -->
+                    <div class="relative w-full bg-gradient-to-b from-sky-50/80 via-white to-slate-100/90 flex-grow min-h-[470px] flex items-center justify-center p-2 overflow-hidden">
+                        <canvas id="labCanvas" class="w-full h-full rounded-xl"></canvas>
+
+                        <!-- Floating Status Badge -->
+                        <div id="sim-status-badge" class="absolute top-4 left-4 max-w-[90%] bg-white/95 backdrop-blur border border-slate-200 px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium text-slate-700 shadow-sm">
+                            ស្ថានភាព៖ រួចរាល់សម្រាប់ចាប់ផ្តើមពិសោធន៍
+                        </div>
+
+                    </div>
+
+                    <!-- Control Toolbar -->
+                    <div class="bg-slate-50 border-t border-slate-200 p-4 space-y-3">
+                        <!-- Custom Chemical & Concentration Controls -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 bg-white p-3 rounded-xl border border-slate-200 text-xs">
+                            <div>
+                                <label for="select-acid" class="font-bold text-slate-700 block mb-1">១. ជ្រើសរើសអាស៊ីត (សូលុយស្យុង) ៖</label>
+                                <select id="select-acid" onchange="applyCustomConfig()" class="w-full px-2.5 py-2 rounded-lg border border-slate-300 bg-slate-50 font-semibold text-slate-800 focus:border-teal-600 focus:outline-none cursor-pointer">
+                                    <option value="lemon" selected>ទឹកក្រូចឆ្មា (អាស៊ីតស៊ីទ្រិក)</option>
+                                    <option value="vinegar">ទឹកខ្មេះ (CH₃COOH)</option>
+                                    <option value="hcl">អាស៊ីតក្លរីឌ្រិច (HCl)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="select-solid" class="font-bold text-slate-700 block mb-1">២. ជ្រើសរើសអង្គធាតុរឹង ៖</label>
+                                <select id="select-solid" onchange="applyCustomConfig()" class="w-full px-2.5 py-2 rounded-lg border border-slate-300 bg-slate-50 font-semibold text-slate-800 focus:border-teal-600 focus:outline-none cursor-pointer">
+                                    <option value="eggshell" selected>សំបកពងមាន់ (CaCO₃)</option>
+                                    <option value="caco3">កាល់ស្យូមកាបូណាត (CaCO₃)</option>
+                                    <option value="nahco3">សូដ្យូមប៊ីកាបូណាត (NaHCO₃)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="select-conc-ratio" class="font-bold text-slate-700 block mb-1">៣. កំហាប់ដបទី២ (ធៀបដបទី១ 100%) ៖</label>
+                                <select id="select-conc-ratio" onchange="applyCustomConfig()" class="w-full px-2.5 py-2 rounded-lg border border-slate-300 bg-slate-50 font-semibold text-slate-800 focus:border-teal-600 focus:outline-none cursor-pointer">
+                                    <option value="0.25">២៥% (7.5 mL + 22.5 mL ទឹក)</option>
+                                    <option value="0.5" selected>៥០% (15 mL + 15 mL ទឹក)</option>
+                                    <option value="0.75">៧៥% (22.5 mL + 7.5 mL ទឹក)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap items-center justify-between gap-3">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <button id="btn-drop" onclick="startExperiment()" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold px-4 py-2.5 rounded-xl shadow-md shadow-emerald-600/20 transition-all cursor-pointer text-sm">
+                                    <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                                    <span>លើកប៉េងប៉ោងទម្លាក់អង្គធាតុរឹង</span>
+                                </button>
+                                <button id="btn-pause" onclick="togglePause()" disabled class="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 disabled:opacity-40 disabled:pointer-events-none text-white font-semibold px-3.5 py-2.5 rounded-xl shadow-sm transition-all cursor-pointer text-sm">
+                                    <i data-lucide="pause" class="w-4 h-4"></i>
+                                    <span id="pause-text">ផ្អាក</span>
+                                </button>
+                                <button onclick="resetExperiment()" class="flex items-center gap-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-3.5 py-2.5 rounded-xl transition-all cursor-pointer text-sm">
+                                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                                    <span>រៀបចំឡើងវិញ</span>
+                                </button>
+                            </div>
+
+                            <!-- Speed Control -->
+                            <div class="flex items-center gap-2 text-xs sm:text-sm text-slate-600 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-2xs">
+                                <span>ល្បឿន៖</span>
+                                <select id="sim-speed" class="font-semibold text-teal-800 bg-transparent focus:outline-none cursor-pointer">
+                                    <option value="5">1x (ធម្មតា)</option>
+                                    <option value="15">3x (លឿន)</option>
+                                    <option value="30" selected>6x (លឿនបំផុត - ណែនាំ)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Observation & Microscopic View (5 cols) -->
+                <div class="lg:col-span-5 flex flex-col gap-4">
+
+                    <!-- Student Observation Note Card (Compact Gas Volume Result Summary at Top Right) -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                            <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
+                                <i data-lucide="eye" class="w-4 h-4 text-teal-600"></i>
+                                <span>លទ្ធផល &amp; កំណត់ចំណាំសង្កេត</span>
+                            </h3>
+                            <span class="text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full">
+                                មាឌឧស្ម័ន CO₂
+                            </span>
+                        </div>
+
+                        <!-- Compact Result Boxes for Gas Volume -->
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div class="bg-amber-50/90 border border-amber-200 rounded-xl px-3 py-2 flex items-center justify-between gap-2">
+                                <span class="text-[11px] font-bold text-amber-800 leading-tight">ដបទី១ A<br><span class="font-normal">(30 mL សុទ្ធ)</span></span>
+                                <span id="card-vol1" class="text-sm sm:text-base font-mono font-extrabold text-amber-950">0.0 cm³</span>
+                            </div>
+                            <div class="bg-sky-50/90 border border-sky-200 rounded-xl px-3 py-2 flex items-center justify-between gap-2">
+                                <span class="text-[11px] font-bold text-sky-800 leading-tight">ដបទី២ B<br><span class="font-normal">(លាយទឹក)</span></span>
+                                <span id="card-vol2" class="text-sm sm:text-base font-mono font-extrabold text-sky-950">0.0 cm³</span>
+                            </div>
+                        </div>
+
+                        <p class="text-xs text-slate-600 leading-relaxed bg-amber-50/70 border border-amber-200/80 rounded-xl px-3 py-2">
+                            💡 <span class="font-semibold text-amber-900">ណែនាំ៖</span> សង្កេតពពុះឧស្ម័ន ទំហំប៉េងប៉ោង និងមាឌឧស្ម័ន CO₂ ក្នុងរយៈពេល ២ នាទី រួចកត់ត្រា៖
+                        </p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                            <div>
+                                <label id="obs-label-1" class="font-semibold text-amber-900 block mb-1">• ដបទី១ (30 mL សុទ្ធ) ៖</label>
+                                <input type="text" placeholder="ពពុះ និងប៉េងប៉ោង..." class="w-full px-2.5 py-2 rounded-xl border border-slate-200 focus:border-amber-500 focus:outline-none bg-slate-50/60 focus:bg-white transition-colors">
+                            </div>
+                            <div>
+                                <label id="obs-label-2" class="font-semibold text-sky-900 block mb-1">• ដបទី២ (15 mL + 15 mL) ៖</label>
+                                <input type="text" placeholder="ពពុះ និងប៉េងប៉ោង..." class="w-full px-2.5 py-2 rounded-xl border border-slate-200 focus:border-sky-500 focus:outline-none bg-slate-50/60 focus:bg-white transition-colors">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Microscopic Collision View -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 space-y-2.5">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                            <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
+                                <i data-lucide="microscope" class="w-4 h-4 text-indigo-600"></i>
+                                <span>ទិដ្ឋភាពមីក្រូទស្សន៍ (ទ្រឹស្តីទង្គិច)</span>
+                            </h3>
+                            <span class="text-[11px] text-slate-500">ភាគល្អិតក្នុងមួយខ្នាតមាឌ</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div class="text-center space-y-1">
+                                <canvas id="microCanvas1" class="w-full h-24 bg-amber-50/80 rounded-xl border border-amber-200"></canvas>
+                                <span class="text-xs font-bold text-amber-800 block">ដបទី១ A</span>
+                            </div>
+                            <div class="text-center space-y-1">
+                                <canvas id="microCanvas2" class="w-full h-24 bg-sky-50/80 rounded-xl border border-sky-200"></canvas>
+                                <span class="text-xs font-bold text-sky-800 block">ដបទី២ B</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-2 text-[11px] text-slate-600 leading-relaxed">
+                            <span id="micro-note-text"><span class="font-bold text-slate-800">ចំណុចគួរសង្កេត៖</span> ប្រៀបធៀបចំនួនភាគល្អិតក្នុងមួយខ្នាតមាឌ និងការប៉ះទង្គិចរវាងដបទី១ A និងដបទី២ B។</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 5: DATA & GRAPH -->
+        <section id="view-analysis" class="tab-view hidden space-y-5">
+            <div class="flex flex-wrap items-center justify-between gap-3"><div><h2 class="text-xl font-bold text-slate-800">ក្រាហ្វ និងតារាងទិន្នន័យ</h2><p class="text-sm text-slate-500">មាឌឧស្ម័ន CO₂ តាមពេលវេលា • ទិន្នន័យពីគំរូនិម្មិត</p></div><button onclick="resetExperiment();switchTab('lab')" class="px-4 py-2 rounded-xl bg-teal-600 text-white text-sm font-semibold">ចាប់ផ្តើមវាស់ឡើងវិញ</button></div>
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4"><div class="flex flex-wrap justify-between gap-2 mb-3"><h3 class="font-bold text-slate-800">ក្រាហ្វ មាឌ CO₂ ទល់នឹងពេលវេលា</h3><span class="text-xs text-slate-500">ដបទី១៖ ពណ៌លឿង • ដបទី២៖ ពណ៌ខៀវ</span></div><canvas id="dataChart" width="900" height="360" class="w-full"></canvas><p class="text-xs text-amber-700 bg-amber-50 rounded-lg p-3 mt-2">ចំណាំ៖ តម្លៃជាលទ្ធផលគណនារបស់ស៊ីមុលេសិន មិនមែនជាការវាស់វែងពីពិសោធន៍ពិតទេ។</p></div>
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4"><h3 class="font-bold text-slate-800 mb-3">តារាងកត់ត្រាលទ្ធផល</h3><div class="overflow-x-auto"><table class="w-full text-sm text-center border-collapse"><thead class="bg-slate-100"><tr><th class="p-2 border">ពេល (s)</th><th class="p-2 border">CO₂ ដបទី១ (cm³)</th><th class="p-2 border">CO₂ ដបទី២ (cm³)</th><th class="p-2 border">ល្បឿនមធ្យម ដប១ (cm³/s)</th><th class="p-2 border">ល្បឿនមធ្យម ដប២ (cm³/s)</th></tr></thead><tbody id="dataRows"><tr><td colspan="5" class="p-4 text-slate-400">ចាប់ផ្តើមពិសោធន៍ ដើម្បីប្រមូលទិន្នន័យ</td></tr></tbody></table></div><p class="text-xs text-slate-500 mt-3">រូបមន្ត៖ ល្បឿនមធ្យម = Δមាឌ CO₂ ÷ Δពេលវេលា។ គណនាពីចំណុចដំបូងដល់ពេលនីមួយៗ។</p></div>
+            <div class="bg-white rounded-2xl border border-slate-200 p-4"><h3 class="font-bold text-slate-800 mb-2">ការគ្រប់គ្រងអថេរ</h3><p class="text-sm text-slate-600 mb-3">ដើម្បីសិក្សាឥទ្ធិពលកំហាប់ ត្រូវប្តូរតែកំហាប់ប៉ុណ្ណោះ ហើយរក្សាកត្តាផ្សេងៗឱ្យថេរ៖</p><div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-2 text-sm"><label class="p-3 rounded-lg bg-slate-50 border"><input type="checkbox" checked disabled> ម៉ាសអង្គធាតុរឹង៖ 3.0 g</label><label class="p-3 rounded-lg bg-slate-50 border"><input type="checkbox" checked disabled> មាឌសូលុយស្យុង៖ 30 mL</label><label class="p-3 rounded-lg bg-slate-50 border"><input type="checkbox" checked disabled> សីតុណ្ហភាព៖ រក្សាថេរ</label><label class="p-3 rounded-lg bg-slate-50 border"><input type="checkbox" checked disabled> ទំហំគ្រាប់៖ ដូចគ្នា</label></div><p class="text-xs text-slate-500 mt-2">ការកំណត់ទាំងនេះជាសេចក្តីណែនាំសម្រាប់ការពិសោធន៍ពិត; ស៊ីមុលេសិនបច្ចុប្បន្នមិនវាស់សីតុណ្ហភាព ឬទំហំគ្រាប់ជាក់ស្តែងទេ។</p></div>
+        </section>
+
+        <!-- TAB 6: QUIZ -->
+        <section id="view-quiz" class="tab-view hidden space-y-4"><div><h2 class="text-xl font-bold text-slate-800">សំណួរត្រួតពិនិត្យការយល់ដឹង</h2><p class="text-sm text-slate-500">ជ្រើសរើសចម្លើយត្រឹមត្រូវ រួចចុចផ្ទៀងផ្ទាត់</p></div><div id="quiz-area" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-5">
+            <div class="quiz-q" data-answer="b"><p class="font-bold mb-2">១. នៅសីតុណ្ហភាពដូចគ្នា តើកំហាប់ខ្ពស់ជាទូទៅធ្វើឱ្យល្បឿនប្រតិកម្មយ៉ាងដូចម្តេច?</p><label class="block p-2"><input type="radio" name="q1" value="a"> យឺតជាង</label><label class="block p-2"><input type="radio" name="q1" value="b"> លឿនជាង</label><label class="block p-2"><input type="radio" name="q1" value="c"> មិនប្រែប្រួល</label></div>
+            <div class="quiz-q" data-answer="a"><p class="font-bold mb-2">២. មូលហេតុសំខាន់តាមទ្រឹស្តីទង្គិចគឺអ្វី?</p><label class="block p-2"><input type="radio" name="q2" value="a"> ចំនួនទង្គិចប្រសិទ្ធក្នុងមួយវិនាទីកើនឡើង</label><label class="block p-2"><input type="radio" name="q2" value="b"> ម៉ាសអង្គធាតុរឹងកើនឡើងដោយស្វ័យប្រវត្តិ</label><label class="block p-2"><input type="radio" name="q2" value="c"> សីតុណ្ហភាពតែងតែកើនឡើង</label></div>
+            <div class="quiz-q" data-answer="c"><p class="font-bold mb-2">៣. ក្នុងការសាកល្បងឥទ្ធិពលកំហាប់ តើគួរធ្វើដូចម្តេចចំពោះម៉ាសសំបកពងមាន់ (3.0 g)?</p><label class="block p-2"><input type="radio" name="q3" value="a"> ប្តូរម៉ាសរាល់លើក</label><label class="block p-2"><input type="radio" name="q3" value="b"> មិនចាំបាច់កត់ត្រា</label><label class="block p-2"><input type="radio" name="q3" value="c"> រក្សាម៉ាសឱ្យថេរ</label></div>
+            <div class="quiz-q" data-answer="b"><p class="font-bold mb-2">៤. តើល្បឿនមធ្យមគណនាដោយរូបមន្តណា?</p><label class="block p-2"><input type="radio" name="q4" value="a"> Δt ÷ ΔV</label><label class="block p-2"><input type="radio" name="q4" value="b"> ΔV ÷ Δt</label><label class="block p-2"><input type="radio" name="q4" value="c"> ΔV × Δt</label></div>
+            <div class="quiz-q" data-answer="a"><p class="font-bold mb-2">៥. ទំហំប៉េងប៉ោងក្នុង App នេះគួរបកស្រាយយ៉ាងដូចម្តេច?</p><label class="block p-2"><input type="radio" name="q5" value="a"> ជាសូចនាករប៉ាន់ស្មាន មិនមែនការវាស់មាឌដោយផ្ទាល់</label><label class="block p-2"><input type="radio" name="q5" value="b"> ជាការវាស់មាឌពិតប្រាកដ</label><label class="block p-2"><input type="radio" name="q5" value="c"> ជាការវាស់សីតុណ្ហភាព</label></div>
+            <button onclick="gradeQuiz()" class="bg-teal-600 hover:bg-teal-700 text-white rounded-xl px-5 py-2 font-semibold">ពិនិត្យពិន្ទុ</button><p id="quiz-result" class="font-bold text-teal-700" aria-live="polite"></p></div></section>
+
+        <!-- TAB 7: STUDENT REPORT -->
+        <section id="view-report" class="tab-view hidden space-y-4"><div class="flex flex-wrap justify-between gap-3 items-center"><div><h2 class="text-xl font-bold text-slate-800">របាយការណ៍ពិសោធន៍សិស្ស</h2><p class="text-sm text-slate-500">បំពេញព័ត៌មាន រួចបោះពុម្ព ឬរក្សាទុកជា PDF</p></div><button onclick="printSection('student-report')" class="no-print bg-slate-800 hover:bg-slate-900 text-white rounded-xl px-4 py-2 text-sm font-semibold">បោះពុម្ព / Save as PDF</button></div><div id="student-report" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4"><h3 class="text-center font-bold text-lg">របាយការណ៍ពិសោធន៍៖ កត្តាកំហាប់លើល្បឿនប្រតិកម្ម</h3><div class="grid sm:grid-cols-2 gap-3"><label class="text-sm">ឈ្មោះសិស្ស<input id="student-name" class="block w-full mt-1 border rounded-lg p-2" placeholder="ឈ្មោះ និងនាមត្រកូល"></label><label class="text-sm">ថ្នាក់ / ក្រុម<input id="student-class" class="block w-full mt-1 border rounded-lg p-2" placeholder="ថ្នាក់ និងក្រុម"></label></div><label class="block text-sm">សម្មតិកម្ម<textarea id="student-hypothesis" class="block w-full mt-1 border rounded-lg p-2" rows="2" placeholder="ខ្ញុំសន្មតថា..."></textarea></label><label class="block text-sm">អថេរឯករាជ្យ / អថេរអាស្រ័យ / អថេរគ្រប់គ្រង<textarea id="student-variables" class="block w-full mt-1 border rounded-lg p-2" rows="2" placeholder="ឯករាជ្យ៖ កំហាប់; អាស្រ័យ៖ ល្បឿន; គ្រប់គ្រង៖ ម៉ាស សីតុណ្ហភាព..."></textarea></label><label class="block text-sm">លទ្ធផល និងការពិភាក្សា<textarea id="student-results" class="block w-full mt-1 border rounded-lg p-2" rows="3" placeholder="សរសេរលទ្ធផលពីតារាង និងក្រាហ្វ..."></textarea></label><label class="block text-sm">សេចក្តីសន្និដ្ឋាន<textarea id="student-conclusion" class="block w-full mt-1 border rounded-lg p-2" rows="3" placeholder="សន្និដ្ឋានតាមភស្តុតាង..."></textarea></label><div class="text-xs text-slate-500">សេចក្តីរំលឹក៖ ទិន្នន័យដែល App បង្កើតគឺជាទិន្នន័យស៊ីមុលេសិន មិនមែនទិន្នន័យពិសោធន៍ពិតទេ។</div><div class="pt-3 border-t"><h4 class="font-bold text-sm mb-2">ទិន្នន័យដែលប្រមូលបានពីស៊ីមុលេសិន</h4><div id="report-data-preview" class="text-sm text-slate-600">មិនទាន់មានទិន្នន័យទេ។ សូមដំណើរការពិសោធន៍ជាមុន។</div></div></div></section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500 no-print">
+        <p>កម្មវិធីជំនួយការបង្រៀន និងរៀនតាមបែបរិះរក (IBL) • គីមីវិទ្យា ថ្នាក់ទី១២</p>
+    </footer>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT LOGIC                           -->
+    <!-- ========================================== -->
     <script>
-        window.onload = function () {
-            const canvas = document.getElementById('simCanvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
+        // Initialize Lucide Icons
+        lucide.createIcons();
 
-            const tab1Btn = document.getElementById('tab1Btn');
-            const tab2Btn = document.getElementById('tab2Btn');
-            const tab3Btn = document.getElementById('tab3Btn');
-            const exp1Controls = document.getElementById('exp1Controls');
-            const exp2Controls = document.getElementById('exp2Controls');
-            const exp3Controls = document.getElementById('exp3Controls');
-            const resetBtn = document.getElementById('resetBtn');
+        // Tab Switching Logic
+        function switchTab(tabName) {
+            // Hide all views
+            document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
+            // Show selected view
+            document.getElementById('view-' + tabName).classList.remove('hidden');
 
-            const phScaleGrid = document.getElementById('phScaleGrid');
-            const activePhBadge = document.getElementById('activePhBadge');
-            const sampleSelect = document.getElementById('sampleSelect');
-            const indicatorSelect = document.getElementById('indicatorSelect');
-            const dipBtn = document.getElementById('dipBtn');
-            const exp1Observation = document.getElementById('exp1Observation');
+            // Reset tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'text-teal-800', 'shadow');
+                btn.classList.add('text-white', 'hover:bg-white/15');
+            });
 
-            const reagentSelect = document.getElementById('reagentSelect');
-            const addReagentBtn = document.getElementById('addReagentBtn');
-            const exp2Observation = document.getElementById('exp2Observation');
+            // Highlight active button
+            const activeBtn = document.getElementById('tab-' + tabName);
+            activeBtn.classList.remove('text-white', 'hover:bg-white/15');
+            activeBtn.classList.add('bg-white', 'text-teal-800', 'shadow');
 
-            const btnPureWater = document.getElementById('btnPureWater');
-            const btnStrongAcid = document.getElementById('btnStrongAcid');
-            const btnCorrosive = document.getElementById('btnCorrosive');
-            const exp3Observation = document.getElementById('exp3Observation');
-
-            let currentTab = 1;
-            let lastTime = performance.now();
-            let animClock = 0;
-
-            // ពណ៌មាត្រដ្ឋាន pH សកល
-            const phColors = [
-                { val: 1, color: '#ef4444' }, { val: 2, color: '#f97316' }, { val: 3, color: '#fb923c' },
-                { val: 4, color: '#facc15' }, { val: 5, color: '#eab308' }, { val: 6, color: '#a3e635' },
-                { val: 7, color: '#22c55e' }, { val: 8, color: '#10b981' }, { val: 9, color: '#14b8a6' },
-                { val: 10, color: '#06b6d4' }, { val: 11, color: '#3b82f6' }, { val: 12, color: '#6366f1' },
-                { val: 13, color: '#8b5cf6' }, { val: 14, color: '#7e22ce' }
-            ];
-
-            // ទិន្នន័យសូលុយស្យុងសម្រាប់ Tab 1
-            const samplesData = {
-                lemon: { name: 'ទឹកក្រូចឆ្មា', ph: 2, phColor: '#f97316', litmusBase: '#3b82f6', litmusActive: '#ef4444', helianthinBase: '#f59e0b', helianthinActive: '#ef4444', liquid: 'rgba(250, 204, 21, 0.28)' },
-                vinegar: { name: 'ទឹកខ្មេះ CH₃COOH', ph: 3, phColor: '#fb923c', litmusBase: '#3b82f6', litmusActive: '#ef4444', helianthinBase: '#f59e0b', helianthinActive: '#f97316', liquid: 'rgba(226, 232, 240, 0.22)' },
-                hcl: { name: 'សូលុយស្យុង HCl រាវ', ph: 1, phColor: '#ef4444', litmusBase: '#3b82f6', litmusActive: '#dc2626', helianthinBase: '#f59e0b', helianthinActive: '#dc2626', liquid: 'rgba(248, 113, 113, 0.22)' },
-                water: { name: 'ទឹកសុទ្ធ (H₂O)', ph: 7, phColor: '#22c55e', litmusBase: '#3b82f6', litmusActive: '#2563eb', helianthinBase: '#f59e0b', helianthinActive: '#f59e0b', liquid: 'rgba(56, 189, 248, 0.24)' }
-            };
-
-            // ស្ថានភាព Tab 1
-            let stripState = {
-                dipped: false,
-                dipOffset: 0,
-                wetProgress: 0,
-                baseColor: '#fef3c7',
-                activeColor: '#f97316',
-                ph: null,
-                indName: ''
-            };
-
-            // ស្ថានភាព Tab 2
-            let exp2State = {
-                reagent: 'zn',
-                active: false,
-                dropProgress: 0,
-                bubbles: [],
-                productText: 'ជ្រើសរើសសារធាតុ រួចចុចប៊ូតុងខាងក្រោម',
-                equationText: '',
-                liquidColor: 'rgba(248, 113, 113, 0.24)'
-            };
-
-            // ស្ថានភាព Tab 3
-            let exp3State = {
-                mode: 'idle',
-                ions: []
-            };
-
-            function initIons() {
-                exp3State.ions = [];
-                for (let i = 0; i < 18; i++) {
-                    exp3State.ions.push({
-                        x: -0.75 + (i % 6) * 0.3 + (Math.random() - 0.5) * 0.1,
-                        y: 0.1 + Math.random() * 0.8,
-                        type: i % 2 === 0 ? 'H+' : 'Cl-',
-                        speed: 0.28 + Math.random() * 0.3
-                    });
-                }
+            // Resize canvases if switching back to lab
+            if (tabName === 'lab') {
+                resizeCanvases();
             }
-            initIons();
+        }
 
-            function renderPHGrid(highlightPh = null) {
-                phScaleGrid.innerHTML = '';
-                phColors.forEach(item => {
-                    const div = document.createElement('div');
-                    div.style.backgroundColor = item.color;
-                    const ring = highlightPh === item.val ? 'ring-2 ring-slate-900 scale-110 z-10 shadow-md' : '';
-                    div.className = `py-1.5 rounded-lg transition-all duration-300 ${ring}`;
-                    div.textContent = item.val;
-                    phScaleGrid.appendChild(div);
+        // Print Specific Section
+        function printSection(elementId) {
+            const printContent = document.getElementById(elementId).innerHTML;
+            const printContainer = document.createElement('div');
+            printContainer.id = 'printable-area';
+            printContainer.className = 'p-6 bg-white text-black';
+            printContainer.innerHTML = printContent;
+            document.body.appendChild(printContainer);
+            window.print();
+            document.body.removeChild(printContainer);
+        }
+
+        // Subtle Sound Effect using Tone.js
+        function playSuccessTone() {
+            try {
+                if (typeof Tone !== 'undefined') {
+                    const synth = new Tone.Synth().toDestination();
+                    synth.triggerAttackRelease("C5", "8n");
+                    setTimeout(() => synth.triggerAttackRelease("E5", "8n"), 120);
+                    setTimeout(() => synth.triggerAttackRelease("G5", "4n"), 240);
+                }
+            } catch (e) {
+                // Ignore audio context restrictions if not interacted
+            }
+        }
+
+        // ========================================== -->
+        // VIRTUAL LAB SIMULATION ENGINE              -->
+        // ========================================== -->
+        const labCanvas = document.getElementById('labCanvas');
+        const ctx = labCanvas.getContext('2d');
+
+        const microCanvas1 = document.getElementById('microCanvas1');
+        const mCtx1 = microCanvas1.getContext('2d');
+        const microCanvas2 = document.getElementById('microCanvas2');
+        const mCtx2 = microCanvas2.getContext('2d');
+
+        // Simulation State
+        let simState = 'IDLE'; // IDLE, LIFTING, REACTING, PAUSED, FINISHED
+        let elapsedTime = 0; // in simulated seconds (0 to 120s = 2 minutes)
+        const maxTime = 120; // 2 minutes
+        let liftProgress = 0; // 0 to 1 for balloon lifting animation
+
+        // Customizable Chemical Presets
+        const ACID_PRESETS = {
+            lemon: {
+                name: 'ទឹកក្រូចឆ្មា',
+                shortLabel: 'ទឹកក្រូចឆ្មា',
+                rateFactor: 1.0,
+                maxVolFactor: 1.0,
+                highLiquid: 'rgba(250, 204, 21, 0.65)',
+                highMeniscus: 'rgba(234, 179, 8, 0.85)',
+                lowLiquid: 'rgba(254, 240, 138, 0.58)',
+                lowMeniscus: 'rgba(253, 224, 71, 0.75)',
+                particleColor: '#dc2626',
+                highCount: 24
+            },
+            vinegar: {
+                name: 'ទឹកខ្មេះ (CH₃COOH)',
+                shortLabel: 'ទឹកខ្មេះ',
+                rateFactor: 0.85,
+                maxVolFactor: 0.92,
+                highLiquid: 'rgba(245, 158, 11, 0.35)',
+                highMeniscus: 'rgba(217, 119, 6, 0.55)',
+                lowLiquid: 'rgba(254, 243, 199, 0.38)',
+                lowMeniscus: 'rgba(253, 230, 138, 0.55)',
+                particleColor: '#ea580c',
+                highCount: 20
+            },
+            hcl: {
+                name: 'អាស៊ីតក្លរីឌ្រិច (HCl)',
+                shortLabel: 'HCl',
+                rateFactor: 1.45,
+                maxVolFactor: 1.15,
+                highLiquid: 'rgba(125, 211, 252, 0.45)',
+                highMeniscus: 'rgba(56, 189, 248, 0.65)',
+                lowLiquid: 'rgba(224, 242, 254, 0.45)',
+                lowMeniscus: 'rgba(186, 230, 253, 0.65)',
+                particleColor: '#e11d48',
+                highCount: 30
+            }
+        };
+
+        const SOLID_PRESETS = {
+            eggshell: {
+                name: 'សំបកពងមាន់',
+                formula: 'CaCO₃',
+                reactivityFactor: 1.0,
+                grainColor: '#f8fafc',
+                grainStroke: '#cbd5e1',
+                wallColor: '#cbd5e1'
+            },
+            caco3: {
+                name: 'កាល់ស្យូមកាបូណាត',
+                formula: 'CaCO₃',
+                reactivityFactor: 1.12,
+                grainColor: '#ffffff',
+                grainStroke: '#94a3b8',
+                wallColor: '#e2e8f0'
+            },
+            nahco3: {
+                name: 'សូដ្យូមប៊ីកាបូណាត',
+                formula: 'NaHCO₃',
+                reactivityFactor: 1.3,
+                grainColor: '#f0fdf4',
+                grainStroke: '#86efac',
+                wallColor: '#bbf7d0'
+            }
+        };
+
+        let currentAcidKey = 'lemon';
+        let currentSolidKey = 'eggshell';
+        let concRatio = 0.5; // Bottle 2 concentration relative to Bottle 1 (1.0)
+
+        // Reaction Data (Dynamic based on selected acid, solid, and concentration ratio)
+        let vol1 = 0;
+        let vol2 = 0;
+
+        // Particles (Bubbles & Solid grains)
+        let bubbles1 = [];
+        let bubbles2 = [];
+        let grains1 = [];
+        let grains2 = [];
+
+        // Microscopic Particles
+        let microParticles1 = [];
+        let microParticles2 = [];
+
+        function applyCustomConfig() {
+            currentAcidKey = document.getElementById('select-acid').value;
+            currentSolidKey = document.getElementById('select-solid').value;
+            concRatio = parseFloat(document.getElementById('select-conc-ratio').value);
+
+            const acid = ACID_PRESETS[currentAcidKey];
+            const solid = SOLID_PRESETS[currentSolidKey];
+            const pct2 = Math.round(concRatio * 100);
+            const volAcid2 = (30 * concRatio).toFixed(1).replace(/\.0$/, '');
+            const volWater2 = (30 * (1 - concRatio)).toFixed(1).replace(/\.0$/, '');
+
+            // Update observation labels & micro note dynamically
+            const obs1 = document.getElementById('obs-label-1');
+            const obs2 = document.getElementById('obs-label-2');
+            const microNote = document.getElementById('micro-note-text');
+
+            if (obs1) obs1.textContent = `• ដបទី១ (${acid.shortLabel} 30 mL សុទ្ធ) ៖`;
+            if (obs2) obs2.textContent = `• ដបទី២ (${acid.shortLabel} ${volAcid2} mL + ទឹក ${volWater2} mL) ៖`;
+            if (microNote) {
+                microNote.innerHTML = `<span class="font-bold text-slate-800">ចំណុចគួរសង្កេត៖</span> ប្រៀបធៀបចំនួនភាគល្អិត ${acid.shortLabel} ក្នុងមួយខ្នាតមាឌ និងភាពញឹកញាប់នៃការប៉ះទង្គិចជាមួយ ${solid.name} (${solid.formula}) រវាងដបទី១ A និងដបទី២ B។`;
+            }
+
+            initMicroParticles();
+            resetExperiment();
+        }
+
+        function initMicroParticles() {
+            microParticles1 = [];
+            microParticles2 = [];
+            const acid = ACID_PRESETS[currentAcidKey];
+            const count1 = acid.highCount;
+            const count2 = Math.max(4, Math.round(count1 * concRatio));
+
+            // Bottle 1: High concentration particles
+            for (let i = 0; i < count1; i++) {
+                microParticles1.push({
+                    x: Math.random() * 140 + 10,
+                    y: Math.random() * 80 + 10,
+                    vx: (Math.random() - 0.5) * 2.5,
+                    vy: (Math.random() - 0.5) * 2.5,
+                    flash: 0
                 });
             }
-            renderPHGrid();
-
-            function resizeCanvas() {
-                const rect = canvas.parentElement.getBoundingClientRect();
-                const dpr = window.devicePixelRatio || 1;
-                const w = rect.width || 650;
-                const h = Math.max(300, Math.min(360, w * 0.52));
-                canvas.style.width = w + 'px';
-                canvas.style.height = h + 'px';
-                canvas.width = w * dpr;
-                canvas.height = h * dpr;
-                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            }
-
-            function switchTab(idx) {
-                currentTab = idx;
-                [tab1Btn, tab2Btn, tab3Btn].forEach((b, i) => {
-                    const active = (i + 1) === idx;
-                    const badge = b.querySelector('span');
-                    b.className = active
-                        ? 'py-2.5 px-2 sm:px-3 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 shadow-sm bg-white text-rose-800 flex flex-col sm:flex-row items-center justify-center gap-1.5'
-                        : 'py-2.5 px-2 sm:px-3 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 text-slate-600 hover:text-slate-900 hover:bg-white/60 flex flex-col sm:flex-row items-center justify-center gap-1.5';
-                    badge.className = active
-                        ? 'inline-flex items-center justify-center w-5 h-5 rounded-full bg-rose-100 text-rose-800 text-[11px] font-bold'
-                        : 'inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-[11px] font-bold';
+            // Bottle 2: Diluted concentration particles
+            for (let i = 0; i < count2; i++) {
+                microParticles2.push({
+                    x: Math.random() * 140 + 10,
+                    y: Math.random() * 80 + 10,
+                    vx: (Math.random() - 0.5) * 2.5,
+                    vy: (Math.random() - 0.5) * 2.5,
+                    flash: 0
                 });
-                exp1Controls.classList.toggle('hidden', idx !== 1);
-                exp2Controls.classList.toggle('hidden', idx !== 2);
-                exp3Controls.classList.toggle('hidden', idx !== 3);
             }
+        }
 
-            tab1Btn.addEventListener('click', () => switchTab(1));
-            tab2Btn.addEventListener('click', () => switchTab(2));
-            tab3Btn.addEventListener('click', () => switchTab(3));
+        function initEggshellGrains() {
+            grains1 = [];
+            grains2 = [];
+            for (let i = 0; i < 28; i++) {
+                grains1.push({
+                    offsetX: (Math.random() - 0.5) * 30,
+                    offsetY: Math.random() * 12,
+                    size: Math.random() * 2.5 + 1.5
+                });
+                grains2.push({
+                    offsetX: (Math.random() - 0.5) * 30,
+                    offsetY: Math.random() * 12,
+                    size: Math.random() * 2.5 + 1.5
+                });
+            }
+        }
 
-            sampleSelect.addEventListener('change', () => {
-                stripState.dipped = false;
-                stripState.dipOffset = 0;
-                stripState.wetProgress = 0;
-                activePhBadge.textContent = 'មិនទាន់វាស់';
-                renderPHGrid();
-            });
+        function resizeCanvases() {
+            // Main Lab Canvas with High-DPI scaling for crisp Khmer text
+            const dpr = window.devicePixelRatio || 1;
+            const rect = labCanvas.parentElement.getBoundingClientRect();
+            const logicalW = Math.max(320, rect.width - 16);
+            const logicalH = Math.max(440, rect.height - 16);
 
-            indicatorSelect.addEventListener('change', () => {
-                stripState.dipped = false;
-                stripState.dipOffset = 0;
-                stripState.wetProgress = 0;
-                activePhBadge.textContent = 'មិនទាន់វាស់';
-                renderPHGrid();
-            });
+            labCanvas.style.width = logicalW + 'px';
+            labCanvas.style.height = logicalH + 'px';
+            labCanvas.width = Math.floor(logicalW * dpr);
+            labCanvas.height = Math.floor(logicalH * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-            resetBtn.addEventListener('click', () => {
-                if (currentTab === 1) {
-                    stripState.dipped = false;
-                    stripState.dipOffset = 0;
-                    stripState.wetProgress = 0;
-                    activePhBadge.textContent = 'មិនទាន់វាស់';
-                    renderPHGrid();
-                    exp1Observation.innerHTML = `<span class="text-lg leading-none mt-0.5">💡</span><div><span class="font-bold text-rose-900">សំណួរសង្កេត៖</span> សាកល្បងជ្រលក់ក្រដាសតេស្តក្នុងសូលុយស្យុងអាស៊ីដ និងទឹកសុទ្ធ។ តើក្រដាសប្រែពណ៌យ៉ាងដូចម្តេច? តើតម្លៃ pH របស់អាស៊ីដស្ថិតនៅចន្លោះណា?</div>`;
-                } else if (currentTab === 2) {
-                    exp2State.active = false;
-                    exp2State.dropProgress = 0;
-                    exp2State.bubbles = [];
-                    exp2State.productText = 'ជ្រើសរើសសារធាតុ រួចចុចប៊ូតុងខាងក្រោម';
-                    exp2State.equationText = '';
-                    exp2State.liquidColor = 'rgba(248, 113, 113, 0.24)';
-                    exp2Observation.innerHTML = `<span class="text-lg leading-none mt-0.5">💡</span><div><span class="font-bold text-rose-900">សំណួរសង្កេត៖</span> ករណីណាខ្លះភាយពពុះឧស្ម័ន? ករណីណាខ្លះបង្កើតជាអំបិល និងទឹក?</div>`;
+            // Micro Canvases
+            microCanvas1.width = microCanvas1.clientWidth;
+            microCanvas1.height = microCanvas1.clientHeight;
+            microCanvas2.width = microCanvas2.clientWidth;
+            microCanvas2.height = microCanvas2.clientHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvases);
+
+        function startExperiment() {
+            if (simState === 'IDLE' || simState === 'FINISHED') {
+                resetExperiment();
+                simState = 'LIFTING';
+                document.getElementById('btn-drop').disabled = true;
+                document.getElementById('btn-drop').classList.add('opacity-50', 'pointer-events-none');
+                document.getElementById('btn-pause').disabled = false;
+                updateStatusBadge('កំពុងលើកប៉េងប៉ោងឡើងត្រង់ដើម្បីទម្លាក់សំបកពងមាន់...', 'bg-amber-100 text-amber-900 border-amber-300');
+            }
+        }
+
+        function togglePause() {
+            if (simState === 'REACTING') {
+                simState = 'PAUSED';
+                document.getElementById('pause-text').textContent = 'បន្ត';
+                updateStatusBadge('បានផ្អាកការពិសោធន៍បណ្តោះអាសន្ន', 'bg-slate-200 text-slate-800');
+            } else if (simState === 'PAUSED') {
+                simState = 'REACTING';
+                document.getElementById('pause-text').textContent = 'ផ្អាក';
+                updateStatusBadge('ប្រតិកម្មកំពុងប្រព្រឹត្តទៅ... សូមសង្កេតពពុះឧស្ម័ន និងទំហំប៉េងប៉ោង!', 'bg-emerald-100 text-emerald-900 border-emerald-300');
+            }
+        }
+
+        function resetExperiment() {
+            simState = 'IDLE';
+            elapsedTime = 0;
+            experimentSamples = [];
+            nextSampleSecond = 15;
+            renderDataAnalysis();
+            liftProgress = 0;
+            vol1 = 0;
+            vol2 = 0;
+            bubbles1 = [];
+            bubbles2 = [];
+            initEggshellGrains();
+
+            document.getElementById('btn-drop').disabled = false;
+            document.getElementById('btn-drop').classList.remove('opacity-50', 'pointer-events-none');
+            document.getElementById('btn-pause').disabled = true;
+            document.getElementById('pause-text').textContent = 'ផ្អាក';
+            
+            updateUIReadouts();
+            updateStatusBadge('ស្ថានភាព៖ រួចរាល់សម្រាប់ចាប់ផ្តើមពិសោធន៍', 'bg-white/90 text-slate-700 border-slate-200');
+        }
+
+        function updateStatusBadge(text, classes) {
+            const badge = document.getElementById('sim-status-badge');
+            badge.textContent = text;
+            badge.className = `absolute top-4 left-4 backdrop-blur border px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold shadow-sm transition-all ${classes}`;
+        }
+
+        function formatTime(sec) {
+            const m = Math.floor(sec / 60).toString().padStart(2, '0');
+            const s = Math.floor(sec % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function updateUIReadouts() {
+            document.getElementById('timer-display').textContent = `${formatTime(elapsedTime)} / 02:00 នាទី`;
+            const v1Text = `${vol1.toFixed(1)} cm³`;
+            const v2Text = `${vol2.toFixed(1)} cm³`;
+
+            const r1 = document.getElementById('vol1-readout');
+            const r2 = document.getElementById('vol2-readout');
+            const c1 = document.getElementById('card-vol1');
+            const c2 = document.getElementById('card-vol2');
+
+            if (r1) r1.textContent = v1Text;
+            if (r2) r2.textContent = v2Text;
+            if (c1) c1.textContent = v1Text;
+            if (c2) c2.textContent = v2Text;
+        }
+
+        // Helper to draw wrapped text cleanly without clipping
+        function drawWrappedText(context, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            let currentY = y;
+            for (let n = 0; n < words.length; n++) {
+                const testLine = line + words[n] + ' ';
+                const metrics = context.measureText(testLine);
+                if (metrics.width > maxWidth && n > 0) {
+                    context.fillText(line.trim(), x, currentY);
+                    line = words[n] + ' ';
+                    currentY += lineHeight;
                 } else {
-                    exp3State.mode = 'idle';
-                    exp3Observation.innerHTML = `<span class="text-lg leading-none mt-0.5">💡</span><div><span class="font-bold text-rose-900">សំណួរសង្កេត៖</span> ហេតុអ្វីបានជាសូលុយស្យុងអាស៊ីដអាចចម្លងចរន្តអគ្គិសនីបាន? តើអាស៊ីដមានរសជាតិ និងឥទ្ធិពលលើសម្លៀកបំពាក់/ស្បែកយ៉ាងដូចម្តេច?</div>`;
+                    line = testLine;
                 }
-            });
+            }
+            context.fillText(line.trim(), x, currentY);
+            return currentY;
+        }
 
-            // ព្រឹត្តិការណ៍ Tab 1: ជ្រលក់ក្រដាស
-            dipBtn.addEventListener('click', () => {
-                const s = samplesData[sampleSelect.value];
-                const ind = indicatorSelect.value;
-                stripState.dipped = true;
-                stripState.dipOffset = 0;
-                stripState.wetProgress = 0;
-                stripState.ph = s.ph;
+        // Draw a realistic Water Bottle + Balloon Apparatus (Equal full height & volume)
+        function drawApparatus(xCenter, yBase, config) {
+            const bottleW = 94;
+            const bottleH = 152;
+            const neckW = 30;
+            const neckH = 26;
 
-                if (ind === 'ph') {
-                    stripState.baseColor = '#fef3c7';
-                    stripState.activeColor = s.phColor;
-                    stripState.indName = 'ក្រដាស pH សកល';
-                } else if (ind === 'litmus') {
-                    stripState.baseColor = s.litmusBase;
-                    stripState.activeColor = s.litmusActive;
-                    stripState.indName = 'ក្រដាសទួណឺសុលខៀវ';
-                } else {
-                    stripState.baseColor = s.helianthinBase;
-                    stripState.activeColor = s.helianthinActive;
-                    stripState.indName = 'ហេល្យ៉ង់ទីន';
-                }
+            const bottleTop = yBase - bottleH;
+            const neckTop = bottleTop - neckH;
 
-                activePhBadge.textContent = `pH = ${s.ph}`;
-                renderPHGrid(s.ph);
+            ctx.save();
 
-                if (s.ph < 7) {
-                    exp1Observation.innerHTML = `<span class="text-lg leading-none mt-0.5">✅</span><div><span class="font-bold text-rose-900">លទ្ធផល (${s.name} • ${stripState.indName})៖</span> តម្លៃ <b>pH = ${s.ph} (&lt; 7)</b>។ ក្រដាសតេស្តប្រែពណ៌យ៉ាងច្បាស់ — បញ្ជាក់ពីលក្ខណៈអាស៊ីដ។</div>`;
-                } else {
-                    exp1Observation.innerHTML = `<span class="text-lg leading-none mt-0.5">ℹ️</span><div><span class="font-bold text-sky-900">លទ្ធផល (${s.name} • ${stripState.indName})៖</span> តម្លៃ <b>pH = 7</b> (ណឺត)។ ពណ៌ក្រដាសមិនប្រែទៅជាក្រហមអាស៊ីដទេ។</div>`;
-                }
-            });
+            // 1. Draw Liquid inside bottle (Equal full volume fill height = 96px)
+            const liquidH = 96;
+            const liquidTop = yBase - liquidH;
+            ctx.fillStyle = config.liquidColor;
+            ctx.beginPath();
+            ctx.roundRect(xCenter - bottleW / 2 + 3, liquidTop, bottleW - 6, liquidH - 3, [0, 0, 13, 13]);
+            ctx.fill();
 
-            // ព្រឹត្តិការណ៍ Tab 2: ទម្លាក់សារធាតុប្រតិកម្ម
-            addReagentBtn.addEventListener('click', () => {
-                const r = reagentSelect.value;
-                exp2State.reagent = r;
-                exp2State.active = true;
-                exp2State.dropProgress = 0;
-                exp2State.bubbles = [];
-
-                const map = {
-                    zn: { p: 'ភាយឧស្ម័នអ៊ីដ្រូសែន (H₂) + អំបិល ZnCl₂', e: 'Zn(s) + 2HCl(aq) → ZnCl₂(aq) + H₂(g)↑', c: 'rgba(248, 113, 113, 0.24)', msg: 'មានពពុះឧស្ម័ន <b>H₂</b> ភាយឡើង និងបង្កើតបានជា <b>អំបិល</b>។' },
-                    mg: { p: 'ភាយឧស្ម័នអ៊ីដ្រូសែន (H₂) ខ្លាំង + អំបិល MgCl₂', e: 'Mg(s) + 2HCl(aq) → MgCl₂(aq) + H₂(g)↑', c: 'rgba(248, 113, 113, 0.28)', msg: 'ម៉ាញ៉េស្យូមសកម្មជាងស័ង្កសី ភាយពពុះ <b>H₂</b> និងបង្កើតអំបិល។' },
-                    caco3: { p: 'ភាយពពុះឧស្ម័ន CO₂ + CaCl₂ + H₂O', e: 'CaCO₃(s) + 2HCl(aq) → CaCl₂(aq) + CO₂(g)↑ + H₂O(l)', c: 'rgba(255, 255, 255, 0.25)', msg: 'សំបកពងមាន់រលាយបាត់ ភាយពពុះឧស្ម័ន <b>CO₂</b>។' },
-                    naoh: { p: 'ប្រតិកម្មបន្សាប៖ អំបិល NaCl + ទឹក H₂O', e: 'HCl(aq) + NaOH(aq) → NaCl(aq) + H₂O(l)', c: 'rgba(52, 211, 153, 0.28)', msg: 'ផ្តល់ផលជា <b>អំបិល និងទឹក</b> (គ្មានពពុះឧស្ម័ន)។' },
-                    cuo: { p: 'អុកស៊ីតបាសរលាយ ឱ្យសូលុយស្យុងពណ៌ខៀវ', e: 'CuO(s) + 2HCl(aq) → CuCl₂(aq) + H₂O(l)', c: 'rgba(59, 130, 246, 0.38)', msg: 'ផ្តល់ផលជា <b>អំបិល និងទឹក</b> ពណ៌ខៀវ។' }
-                };
-                const item = map[r];
-                exp2State.productText = item.p;
-                exp2State.equationText = item.e;
-                exp2State.liquidColor = item.c;
-                exp2Observation.innerHTML = `<span class="text-lg leading-none mt-0.5">⚗️</span><div><span class="font-bold text-rose-900">សង្កេតប្រតិកម្ម៖</span> ${item.msg}</div>`;
-            });
-
-            // ព្រឹត្តិការណ៍ Tab 3
-            btnPureWater.addEventListener('click', () => {
-                exp3State.mode = 'water';
-                exp3Observation.innerHTML = `<span class="text-lg leading-none mt-0.5">💧</span><div><span class="font-bold text-sky-900">ទឹកសុទ្ធ៖</span> អំពូលភ្លើង <b>មិនភ្លឺ</b> ទេ ព្រោះទឹកសុទ្ធស្ទើរតែគ្មានអ៊ីយ៉ុងចល័ត។</div>`;
-            });
-            btnStrongAcid.addEventListener('click', () => {
-                exp3State.mode = 'acid';
-                exp3Observation.innerHTML = `<span class="text-lg leading-none mt-0.5">⚡</span><div><span class="font-bold text-rose-900">អាស៊ីដក្នុងទឹក៖</span> អំពូលភ្លើង <b>ភ្លឺ</b> ព្រោះអាស៊ីដបំបែកជាអ៊ីយ៉ុង (H⁺, Cl⁻) ធ្វើចលនាផ្ទុកបន្ទុកអគ្គិសនី — <b>ជាអេឡិចត្រូលីត</b>។</div>`;
-            });
-            btnCorrosive.addEventListener('click', () => {
-                exp3State.mode = 'corrosive';
-                exp3Observation.innerHTML = `<span class="text-lg leading-none mt-0.5">⚠️</span><div><span class="font-bold text-amber-900">លក្ខណៈរូប & ការកាត់សាច់៖</span> អាស៊ីដមាន <b>រសជាតិជូរ</b> និង <b>កាត់ស្បែក សាច់ និងសម្លៀកបំពាក់</b>។</div>`;
-            });
-
-            // គូរកែវពិសោធន៍បែប 2.5D Glass
-            function drawGlassBeaker(x, y, w, h, liquidColor, title) {
-                const liquidTop = y + h * 0.34;
-                ctx.save();
-
-                // ចំណងជើងកែវ
-                ctx.fillStyle = '#f1f5f9';
-                ctx.font = '700 13.5px "Kantumruy Pro", sans-serif';
-                ctx.textAlign = 'center';
-                ctx.fillText(title, x + w / 2, y - 16);
-
-                // ស្រមោលក្រោមកែវ
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+            // Volume graduation marks on bottle side for clear equal volume observation
+            ctx.strokeStyle = 'rgba(71, 85, 105, 0.35)';
+            ctx.lineWidth = 1;
+            ctx.fillStyle = '#475569';
+            ctx.font = '10px "Kantumruy Pro", sans-serif';
+            ctx.textAlign = 'left';
+            [0.33, 0.66, 1.0].forEach((ratio, idx) => {
+                const markY = yBase - liquidH * ratio;
                 ctx.beginPath();
-                ctx.ellipse(x + w / 2, y + h + 6, w * 0.56, 7, 0, 0, Math.PI * 2);
-                ctx.fill();
-
-                // ផ្ទៃសូលុយស្យុងខាងក្នុង
-                ctx.save();
-                ctx.beginPath();
-                ctx.roundRect(x + 2, liquidTop, w - 4, y + h - liquidTop - 2, [0, 0, 12, 12]);
-                ctx.clip();
-
-                const grad = ctx.createLinearGradient(x, liquidTop, x + w, y + h);
-                grad.addColorStop(0, liquidColor);
-                grad.addColorStop(1, 'rgba(15, 23, 42, 0.25)');
-                ctx.fillStyle = grad;
-                ctx.fillRect(x, liquidTop, w, h);
-
-                // រលកផ្ទៃទឹក
-                ctx.beginPath();
-                ctx.moveTo(x, liquidTop);
-                for (let wx = 0; wx <= w; wx += 6) {
-                    const wy = liquidTop + Math.sin(wx * 0.08 + animClock * 3) * 1.6;
-                    ctx.lineTo(x + wx, wy);
-                }
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
-                ctx.lineWidth = 1.5;
+                ctx.moveTo(xCenter + bottleW / 2 - 14, markY);
+                ctx.lineTo(xCenter + bottleW / 2 - 4, markY);
                 ctx.stroke();
-                ctx.restore();
+                ctx.fillText(`${(idx + 1) * 10}mL`, xCenter + bottleW / 2 - 44, markY + 3);
+            });
 
-                // តួកែវកញ្ចក់
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
-                ctx.beginPath();
-                ctx.roundRect(x, y, w, h, [2, 2, 14, 14]);
-                ctx.fill();
-
-                // គែមកែវ
-                ctx.strokeStyle = 'rgba(203, 213, 225, 0.65)';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(x - 4, y);
-                ctx.lineTo(x, y + 3);
-                ctx.lineTo(x, y + h - 12);
-                ctx.quadraticCurveTo(x, y + h, x + 12, y + h);
-                ctx.lineTo(x + w - 12, y + h);
-                ctx.quadraticCurveTo(x + w, y + h, x + w, y + h - 12);
-                ctx.lineTo(x + w, y + 3);
-                ctx.lineTo(x + w + 4, y);
-                ctx.stroke();
-
-                // ពន្លឺចាំងលើកញ្ចក់
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.14)';
-                ctx.beginPath();
-                ctx.roundRect(x + 7, y + 10, 5, h - 26, 3);
-                ctx.fill();
-
-                // គំនូសក្រិតមាឌ
-                ctx.strokeStyle = 'rgba(226, 232, 240, 0.35)';
+            // Liquid meniscus surface
+            ctx.fillStyle = config.meniscusColor;
+            ctx.beginPath();
+            ctx.ellipse(xCenter, liquidTop, (bottleW - 6) / 2, 4.5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            // 2. Draw Solid Powder (falling during LIFTING or settled at bottom)
+            const solid = SOLID_PRESETS[currentSolidKey];
+            if (simState === 'LIFTING') {
+                const dropY = neckTop + liftProgress * (yBase - neckTop - 10);
+                ctx.fillStyle = solid.grainColor;
+                config.grains.forEach(g => {
+                    ctx.beginPath();
+                    ctx.arc(xCenter + g.offsetX * 0.35, dropY + g.offsetY, g.size, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            } else if (simState === 'REACTING' || simState === 'PAUSED' || simState === 'FINISHED') {
+                const shrink = Math.max(0.25, 1 - (config.volume / 85));
+                ctx.fillStyle = solid.grainColor;
+                ctx.strokeStyle = solid.grainStroke;
                 ctx.lineWidth = 1;
-                for (let i = 1; i <= 4; i++) {
-                    const gy = y + h - i * (h * 0.17);
+                config.grains.forEach(g => {
                     ctx.beginPath();
-                    ctx.moveTo(x + w - 16, gy);
-                    ctx.lineTo(x + w - (i % 2 === 0 ? 6 : 11), gy);
-                    ctx.stroke();
-                }
-
-                ctx.restore();
-            }
-
-            // គូរបន្ទះក្រដាសតេស្ត pH / ទួណឺសុល មានចលនាជ្រលក់
-            function drawIndicatorStrip(cx, restTopY, beakerLiquidY, baseColor, activeColor, dipOffset, wetProgress, phVal, isDipped) {
-                const stripW = 26;
-                const stripH = 105;
-                // ចលនាទម្លាក់ចុះក្នុងទឹក រួចលើកឡើងវិញបន្តិច
-                const currentTopY = restTopY + dipOffset * 55;
-                const x = cx - stripW / 2;
-
-                ctx.save();
-                // ដង្កៀបកាន់ក្រដាសខាងលើ
-                ctx.fillStyle = '#94a3b8';
-                ctx.beginPath();
-                ctx.roundRect(cx - 16, currentTopY - 10, 32, 12, 3);
-                ctx.fill();
-
-                ctx.shadowColor = 'rgba(0,0,0,0.4)';
-                ctx.shadowBlur = 8;
-
-                // ផ្នែកស្ងួតខាងលើ (ពណ៌ដើម)
-                ctx.fillStyle = baseColor;
-                ctx.beginPath();
-                ctx.roundRect(x, currentTopY, stripW, stripH, 4);
-                ctx.fill();
-                ctx.shadowBlur = 0;
-
-                // ផ្នែកសើមខាងក្រោម (ប្រែពណ៌)
-                const wetH = stripH * 0.55 * Math.min(1, wetProgress);
-                if (wetH > 0) {
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.roundRect(x, currentTopY + stripH - wetH, stripW, wetH, [0, 0, 4, 4]);
-                    ctx.clip();
-                    ctx.fillStyle = activeColor;
-                    ctx.fillRect(x, currentTopY + stripH - wetH, stripW, wetH);
-                    ctx.restore();
-
-                    // បន្ទាត់ព្រំដែនសើម-ស្ងួត
-                    ctx.strokeStyle = 'rgba(0,0,0,0.2)';
-                    ctx.lineWidth = 1;
-                    ctx.beginPath();
-                    ctx.moveTo(x, currentTopY + stripH - wetH);
-                    ctx.lineTo(x + stripW, currentTopY + stripH - wetH);
-                    ctx.stroke();
-                }
-
-                // ស៊ុមក្រដាស
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
-                ctx.lineWidth = 1.2;
-                ctx.beginPath();
-                ctx.roundRect(x, currentTopY, stripW, stripH, 4);
-                ctx.stroke();
-
-                // ស្លាកបង្ហាញតម្លៃ pH នៅខាងស្តាំកែវ
-                if (isDipped && wetProgress > 0.4 && phVal !== null) {
-                    const badgeX = cx + 95;
-                    const badgeY = beakerLiquidY + 25;
-                    ctx.fillStyle = activeColor;
-                    ctx.beginPath();
-                    ctx.roundRect(badgeX - 42, badgeY - 14, 84, 28, 14);
-                    ctx.fill();
-                    ctx.strokeStyle = '#fff';
-                    ctx.lineWidth = 1.5;
-                    ctx.stroke();
-
-                    ctx.fillStyle = '#fff';
-                    ctx.font = '700 13px "Kantumruy Pro", sans-serif';
-                    ctx.textAlign = 'center';
-                    ctx.fillText(`pH = ${phVal}`, badgeX, badgeY + 4);
-                }
-
-                ctx.restore();
-            }
-
-            // គូរសៀគ្វីអគ្គិសនីបែបវិទ្យាសាស្ត្រ (Tab 3)
-            function drawCircuitLab(w, h, mode) {
-                if (mode === 'corrosive') {
-                    // បង្ហាញផ្ទាំងព្រមានគ្រោះថ្នាក់ & លក្ខណៈរូបរបស់អាស៊ីដ
-                    const cx = w * 0.5;
-                    const cy = h * 0.5;
-                    ctx.save();
-
-                    // កាតព័ត៌មានកណ្តាល
-                    ctx.fillStyle = 'rgba(251, 191, 36, 0.12)';
-                    ctx.strokeStyle = 'rgba(251, 191, 36, 0.6)';
-                    ctx.lineWidth = 2;
-                    ctx.beginPath();
-                    ctx.roundRect(cx - 190, cy - 95, 380, 190, 20);
+                    ctx.arc(xCenter + g.offsetX, yBase - 6 - g.offsetY * shrink, g.size * Math.max(0.55, shrink), 0, Math.PI * 2);
                     ctx.fill();
                     ctx.stroke();
-
-                    // ត្រីកោណសញ្ញាព្រមាន (Corrosive Hazard)
-                    ctx.fillStyle = '#f59e0b';
-                    ctx.beginPath();
-                    ctx.moveTo(cx, cy - 72);
-                    ctx.lineTo(cx - 32, cy - 20);
-                    ctx.lineTo(cx + 32, cy - 20);
-                    ctx.closePath();
-                    ctx.fill();
-
-                    ctx.fillStyle = '#0f172a';
-                    ctx.font = '900 22px sans-serif';
-                    ctx.textAlign = 'center';
-                    ctx.fillText('!', cx, cy - 28);
-
-                    ctx.fillStyle = '#fef3c7';
-                    ctx.font = '700 15px "Kantumruy Pro", sans-serif';
-                    ctx.fillText('លក្ខណៈរូប និងសុវត្ថិភាពរបស់អាស៊ីដ', cx, cy + 8);
-
-                    ctx.fillStyle = '#e2e8f0';
-                    ctx.font = '500 12.5px "Kantumruy Pro", sans-serif';
-                    ctx.fillText('• មានរសជាតិជូរ (ដូចជាទឹកក្រូចឆ្មា និងទឹកខ្មេះ)', cx, cy + 34);
-                    ctx.fillText('• កាត់ស្បែក សាច់ និងសម្លៀកបំពាក់ឱ្យរលួយ/រលាក', cx, cy + 56);
-                    ctx.fillStyle = '#fca5a5';
-                    ctx.fillText('⚠️ ហាមភ្លក់ ឬប៉ះអាស៊ីដដោយដៃទទេក្នុងមន្ទីរពិសោធន៍!', cx, cy + 78);
-
-                    ctx.restore();
-                    return;
-                }
-
-                const isLit = mode === 'acid';
-                const centerX = w * 0.5;
-                const beakerW = 165;
-                const beakerH = 128;
-                const beakerX = centerX - beakerW / 2;
-                const beakerY = h * 0.45;
-
-                const liquidColor = isLit
-                    ? 'rgba(244, 63, 94, 0.28)'
-                    : (mode === 'water' ? 'rgba(56, 189, 248, 0.24)' : 'rgba(148, 163, 184, 0.16)');
-
-                drawGlassBeaker(beakerX, beakerY, beakerW, beakerH, liquidColor, isLit ? 'សូលុយស្យុងអាស៊ីដ (HCl)' : (mode === 'water' ? 'ទឹកសុទ្ធ (H₂O)' : 'កែវសូលុយស្យុង'));
-
-                const bulbX = centerX;
-                const bulbY = 64;
-                const batX = centerX - 145;
-                const batY = 142;
-
-                ctx.save();
-
-                // ខ្សែភ្លើងតភ្ជាប់សៀគ្វី
-                ctx.strokeStyle = isLit ? '#fde047' : '#64748b';
-                ctx.lineWidth = 2.5;
-                ctx.lineJoin = 'round';
-
-                // ខ្សែពីថ្មពិល (+) ទៅ អំពូល
-                ctx.beginPath();
-                ctx.moveTo(batX, batY - 24);
-                ctx.lineTo(batX, bulbY);
-                ctx.lineTo(bulbX - 18, bulbY);
-                ctx.stroke();
-
-                // ខ្សែពីអំពូល ទៅ អេឡិចត្រូតស្តាំ
-                const rightElecX = centerX + 36;
-                ctx.beginPath();
-                ctx.moveTo(bulbX + 18, bulbY);
-                ctx.lineTo(rightElecX, bulbY);
-                ctx.lineTo(rightElecX, beakerY + 26);
-                ctx.stroke();
-
-                // ខ្សែពីថ្មពិល (-) ទៅ អេឡិចត្រូតឆ្វេង
-                const leftElecX = centerX - 36;
-                ctx.beginPath();
-                ctx.moveTo(batX, batY + 24);
-                ctx.lineTo(batX, beakerY + 26);
-                ctx.lineTo(leftElecX, beakerY + 26);
-                ctx.stroke();
-
-                // អេឡិចត្រូតកាបូនទាំង ២
-                [leftElecX, rightElecX].forEach((ex, idx) => {
-                    ctx.fillStyle = '#334155';
-                    ctx.beginPath();
-                    ctx.roundRect(ex - 5, beakerY + 18, 10, beakerH - 36, 3);
-                    ctx.fill();
-                    ctx.strokeStyle = '#94a3b8';
-                    ctx.lineWidth = 1;
-                    ctx.stroke();
-
-                    // សញ្ញាប៉ូល (-) និង (+)
-                    ctx.fillStyle = idx === 0 ? '#93c5fd' : '#fca5a5';
-                    ctx.font = '700 11px monospace';
-                    ctx.textAlign = 'center';
-                    ctx.fillText(idx === 0 ? '(-)' : '(+)', ex, beakerY + 11);
                 });
+            }
 
-                // ប្រភពភ្លើង (ថ្មពិល DC 9V)
-                ctx.fillStyle = '#1e293b';
+            // 3. Draw CO2 Bubbles rising in liquid
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
+            config.bubbles.forEach(b => {
                 ctx.beginPath();
-                ctx.roundRect(batX - 22, batY - 24, 44, 48, 7);
+                ctx.arc(xCenter + b.x, b.y, b.r, 0, Math.PI * 2);
                 ctx.fill();
-                ctx.strokeStyle = '#94a3b8';
-                ctx.lineWidth = 1.5;
+            });
+
+            // 4. Draw Clear Plastic Bottle Outline & Ridges
+            ctx.strokeStyle = '#64748b';
+            ctx.lineWidth = 2.5;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.14)';
+
+            ctx.beginPath();
+            ctx.moveTo(xCenter - neckW / 2, neckTop);
+            ctx.lineTo(xCenter - neckW / 2, bottleTop);
+            ctx.quadraticCurveTo(xCenter - bottleW / 2, bottleTop + 5, xCenter - bottleW / 2, bottleTop + 25);
+            ctx.lineTo(xCenter - bottleW / 2, yBase - 13);
+            ctx.quadraticCurveTo(xCenter - bottleW / 2, yBase, xCenter - bottleW / 2 + 13, yBase);
+            ctx.lineTo(xCenter + bottleW / 2 - 13, yBase);
+            ctx.quadraticCurveTo(xCenter + bottleW / 2, yBase, xCenter + bottleW / 2, yBase - 13);
+            ctx.lineTo(xCenter + bottleW / 2, bottleTop + 25);
+            ctx.quadraticCurveTo(xCenter + bottleW / 2, bottleTop + 5, xCenter + neckW / 2, bottleTop);
+            ctx.lineTo(xCenter + neckW / 2, neckTop);
+            ctx.stroke();
+
+            // Bottle horizontal decorative ribs
+            ctx.strokeStyle = 'rgba(100, 116, 139, 0.25)';
+            ctx.lineWidth = 1.5;
+            [bottleTop + 34, bottleTop + 48].forEach(ry => {
+                ctx.beginPath();
+                ctx.moveTo(xCenter - bottleW / 2 + 4, ry);
+                ctx.lineTo(xCenter + bottleW / 2 - 4, ry);
+                ctx.stroke();
+            });
+
+            // Glass highlight reflection
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+            ctx.beginPath();
+            ctx.roundRect(xCenter - bottleW / 2 + 8, bottleTop + 28, 6, bottleH - 42, 3);
+            ctx.fill();
+
+            // 5. Draw Balloon attached to bottle neck
+            drawBalloon(xCenter, neckTop, config);
+
+            // 6. Labels below bottle (auto-wrapped cleanly within column width)
+            const labelMaxW = config.maxTextWidth || 180;
+            ctx.fillStyle = '#0f172a';
+            ctx.font = 'bold 13px "Kantumruy Pro", sans-serif';
+            ctx.textAlign = 'center';
+            const lastY1 = drawWrappedText(ctx, config.title, xCenter, yBase + 20, labelMaxW, 17);
+
+            ctx.fillStyle = config.badgeColor;
+            ctx.font = '600 11.5px "Kantumruy Pro", sans-serif';
+            const lastY2 = drawWrappedText(ctx, config.subtitle, xCenter, lastY1 + 17, labelMaxW, 16);
+
+            // Gas volume pill readout directly on canvas below label
+            ctx.fillStyle = '#0f172a';
+            ctx.font = 'bold 12px "Kantumruy Pro", sans-serif';
+            ctx.fillText(`មាឌ CO₂ ៖ ${config.volume.toFixed(1)} cm³`, xCenter, lastY2 + 18);
+
+            ctx.restore();
+        }
+
+        function drawBalloon(xCenter, neckTop, config) {
+            ctx.save();
+            ctx.fillStyle = config.balloonColor;
+            ctx.strokeStyle = config.balloonBorder;
+            ctx.lineWidth = 2;
+
+            // Anchor directly at the top rim of the bottle neck (xCenter, neckTop)
+            const anchorY = neckTop + 2;
+
+            if (simState === 'IDLE' || (simState === 'LIFTING' && liftProgress < 1)) {
+                // Drooping balloon anchored right at the bottle neck
+                const droopAngle = (1 - liftProgress) * 1.1; // Tilts right when idle, straightens to 0 when lifted
+                ctx.translate(xCenter, anchorY);
+                ctx.rotate(droopAngle);
+
+                // Balloon body extending outward from anchor point (0,0)
+                ctx.beginPath();
+                ctx.moveTo(-13, 2);
+                ctx.bezierCurveTo(-24, -18, -28, -54, 0, -58);
+                ctx.bezierCurveTo(28, -54, 24, -18, 13, 2);
+                ctx.closePath();
+                ctx.fill();
                 ctx.stroke();
 
-                ctx.fillStyle = '#fca5a5';
-                ctx.font = '700 10px monospace';
-                ctx.textAlign = 'center';
-                ctx.fillText('+', batX, batY - 11);
-                ctx.fillStyle = '#f8fafc';
-                ctx.fillText('DC 9V', batX, batY + 4);
-                ctx.fillStyle = '#93c5fd';
-                ctx.fillText('-', batX, batY + 18);
-
-                // រស្មីពន្លឺអំពូលពេលភ្លឺ
-                if (isLit) {
-                    const pulse = 0.88 + Math.sin(animClock * 8) * 0.12;
-                    const glow = ctx.createRadialGradient(bulbX, bulbY, 4, bulbX, bulbY, 58 * pulse);
-                    glow.addColorStop(0, 'rgba(254, 240, 138, 0.95)');
-                    glow.addColorStop(0.45, 'rgba(250, 204, 21, 0.45)');
-                    glow.addColorStop(1, 'rgba(250, 204, 21, 0)');
-                    ctx.fillStyle = glow;
+                // Eggshell powder pocket inside drooping balloon
+                if (liftProgress < 0.65) {
+                    ctx.fillStyle = '#f8fafc';
                     ctx.beginPath();
-                    ctx.arc(bulbX, bulbY, 58 * pulse, 0, Math.PI * 2);
+                    ctx.ellipse(0, -40, 10, 7, 0, 0, Math.PI * 2);
                     ctx.fill();
                 }
 
-                // ជើងអំពូល
-                ctx.fillStyle = '#94a3b8';
+                ctx.restore();
+            } else {
+                // Upright inflating balloon anchored directly on top of the bottle neck
+                const expand = (config.volume / 60) * 42;
+                const rx = 20 + expand * 0.85;
+                const ry = 26 + expand;
+
+                ctx.save();
+                ctx.translate(xCenter, anchorY);
                 ctx.beginPath();
-                ctx.roundRect(bulbX - 9, bulbY + 14, 18, 10, 2);
+                ctx.moveTo(-13, 2);
+                ctx.bezierCurveTo(-rx * 1.1, -ry * 0.35, -rx * 0.95, -ry * 1.85, 0, -ry * 2 - 4);
+                ctx.bezierCurveTo(rx * 0.95, -ry * 1.85, rx * 1.1, -ry * 0.35, 13, 2);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+                ctx.restore();
+
+                // Balloon shine reflection
+                const midY = anchorY - ry - 2;
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+                ctx.beginPath();
+                ctx.ellipse(xCenter - rx * 0.38, midY, rx * 0.15, ry * 0.35, -0.25, 0, Math.PI * 2);
                 ctx.fill();
 
-                // កែវអំពូល និងសរសៃរ៉េស៊ីស្តង់
-                ctx.fillStyle = isLit ? '#fef08a' : '#334155';
-                ctx.beginPath();
-                ctx.arc(bulbX, bulbY, 17, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.strokeStyle = '#e2e8f0';
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
+                ctx.restore();
+            }
 
-                // សរសៃឆ្មារក្នុងអំពូល
-                ctx.strokeStyle = isLit ? '#ea580c' : '#94a3b8';
-                ctx.lineWidth = 1.5;
-                ctx.beginPath();
-                ctx.moveTo(bulbX - 5, bulbY + 14);
-                ctx.lineTo(bulbX - 4, bulbY + 2);
-                ctx.lineTo(bulbX, bulbY - 2);
-                ctx.lineTo(bulbX + 4, bulbY + 2);
-                ctx.lineTo(bulbX + 5, bulbY + 14);
-                ctx.stroke();
+            // Balloon rubber collar wrapped snugly around bottle neck rim
+            ctx.fillStyle = config.balloonBorder;
+            ctx.beginPath();
+            ctx.roundRect(xCenter - 15, neckTop - 2, 30, 8, 3);
+            ctx.fill();
+        }
 
-                // ចលនាអ៊ីយ៉ុង H+ និង Cl- ក្នុងសូលុយស្យុងអាស៊ីដ
-                if (isLit) {
-                    exp3State.ions.forEach(ion => {
-                        const ix = centerX + ion.x * (beakerW * 0.44);
-                        const iy = beakerY + beakerH * 0.38 + ion.y * (beakerH * 0.52);
-                        ctx.fillStyle = ion.type === 'H+' ? '#fca5a5' : '#93c5fd';
-                        ctx.beginPath();
-                        ctx.arc(ix, iy, 9.5, 0, Math.PI * 2);
-                        ctx.fill();
+        // Data logging for graph/table: sampled every 15 simulated seconds.
+        let experimentSamples = [];
+        let nextSampleSecond = 15;
+        function recordSample() {
+            if (elapsedTime + 0.0001 < nextSampleSecond) return;
+            const t = nextSampleSecond;
+            experimentSamples.push({t, v1:vol1, v2:vol2});
+            nextSampleSecond += 15;
+            renderDataAnalysis();
+        }
+        function renderDataAnalysis() {
+            const rows = document.getElementById('dataRows');
+            if (!rows) return;
+            if (!experimentSamples.length) { rows.innerHTML='<tr><td colspan="5" class="p-4 text-slate-400">ចាប់ផ្តើមពិសោធន៍ ដើម្បីប្រមូលទិន្នន័យ</td></tr>'; }
+            else rows.innerHTML = experimentSamples.map((p,i)=>`<tr><td class="border p-2">${p.t}</td><td class="border p-2">${p.v1.toFixed(1)}</td><td class="border p-2">${p.v2.toFixed(1)}</td><td class="border p-2">${i ? ((p.v1-experimentSamples[0].v1)/p.t).toFixed(3) : '—'}</td><td class="border p-2">${i ? ((p.v2-experimentSamples[0].v2)/p.t).toFixed(3) : '—'}</td></tr>`).join('');
+            const reportPreview=document.getElementById('report-data-preview');
+            if(reportPreview) reportPreview.innerHTML = experimentSamples.length ? `<table class="w-full text-center border-collapse text-xs"><tr><th class="border p-1">ពេល(s)</th><th class="border p-1">ដប១(cm³)</th><th class="border p-1">ដប២(cm³)</th></tr>${experimentSamples.map(p=>`<tr><td class="border p-1">${p.t}</td><td class="border p-1">${p.v1.toFixed(1)}</td><td class="border p-1">${p.v2.toFixed(1)}</td></tr>`).join('')}</table>` : 'មិនទាន់មានទិន្នន័យទេ។ សូមដំណើរការពិសោធន៍ជាមុន។';
+            drawDataChart();
+        }
+        function drawDataChart() {
+            const c=document.getElementById('dataChart'); if(!c) return;
+            const g=c.getContext('2d'), w=c.width, h=c.height, L=65,R=25,T=25,B=55;
+            g.clearRect(0,0,w,h); g.font='15px sans-serif'; g.fillStyle='#475569';
+            for(let i=0;i<=4;i++){let y=T+(h-T-B)*i/4;g.strokeStyle='#e2e8f0';g.beginPath();g.moveTo(L,y);g.lineTo(w-R,y);g.stroke();g.fillText((100-i*25).toString(),20,y+5);}
+            for(let i=0;i<=4;i++){let x=L+(w-L-R)*i/4;g.strokeStyle='#e2e8f0';g.beginPath();g.moveTo(x,T);g.lineTo(x,h-B);g.stroke();g.fillText((i*30)+'',x-8,h-B+25);}
+            g.fillStyle='#334155';g.fillText('មាឌ CO₂ (cm³)',L,T-8);g.fillText('ពេលវេលា (s)',w/2-45,h-8);
+            const maxV=Math.max(100,...experimentSamples.flatMap(p=>[p.v1,p.v2]));
+            [[ 'v1','#d97706'],['v2','#0284c7']].forEach(([key,color])=>{g.strokeStyle=color;g.lineWidth=3;g.beginPath();experimentSamples.forEach((p,i)=>{let x=L+p.t/120*(w-L-R),y=T+(1-p[key]/maxV)*(h-T-B);i?g.lineTo(x,y):g.moveTo(x,y);});g.stroke();experimentSamples.forEach(p=>{let x=L+p.t/120*(w-L-R),y=T+(1-p[key]/maxV)*(h-T-B);g.fillStyle=color;g.beginPath();g.arc(x,y,4,0,Math.PI*2);g.fill();});});
+            g.fillStyle='#d97706';g.fillRect(w-230,15,14,14);g.fillStyle='#334155';g.fillText('ដបទី១',w-210,27);g.fillStyle='#0284c7';g.fillRect(w-130,15,14,14);g.fillStyle='#334155';g.fillText('ដបទី២',w-110,27);
+        }
+        function gradeQuiz(){let score=0,total=0;document.querySelectorAll('.quiz-q').forEach(q=>{total++;const chosen=q.querySelector('input:checked');q.classList.remove('ring-2','ring-emerald-300','ring-rose-300');if(chosen&&chosen.value===q.dataset.answer){score++;q.classList.add('ring-2','ring-emerald-300');}else q.classList.add('ring-2','ring-rose-300');});document.getElementById('quiz-result').textContent=`អ្នកទទួលបាន ${score}/${total} ពិន្ទុ។ ${score===total?'ពូកែណាស់!':'សូមពិនិត្យមេរៀន និងសាកល្បងម្តងទៀត។'}`;}
 
-                        ctx.fillStyle = '#0f172a';
-                        ctx.font = '700 9px sans-serif';
-                        ctx.textAlign = 'center';
-                        ctx.fillText(ion.type, ix, iy + 3);
+        function updateSimulation(dt) {
+            const speedMultiplier = parseFloat(document.getElementById('sim-speed').value);
+
+            if (simState === 'LIFTING') {
+                liftProgress += dt * 1.8;
+                if (liftProgress >= 1) {
+                    liftProgress = 1;
+                    simState = 'REACTING';
+                    updateStatusBadge('ប្រតិកម្មកំពុងប្រព្រឹត្តទៅ... សង្កេតពពុះឧស្ម័ន និងទំហំប៉េងប៉ោង!', 'bg-emerald-100 text-emerald-900 border-emerald-300');
+                }
+            } else if (simState === 'REACTING') {
+                elapsedTime += dt * speedMultiplier;
+                if (elapsedTime >= maxTime) {
+                    elapsedTime = maxTime;
+                    simState = 'FINISHED';
+                    document.getElementById('btn-pause').disabled = true;
+                    document.getElementById('btn-drop').disabled = false;
+                    document.getElementById('btn-drop').classList.remove('opacity-50', 'pointer-events-none');
+                    updateStatusBadge('ពិសោធន៍បានបញ្ចប់ (គ្រប់ ២ នាទី)! សូមប្រៀបធៀបទំហំប៉េងប៉ោងទាំងពីរ។', 'bg-teal-100 text-teal-900 border-teal-300');
+                    playSuccessTone();
+                }
+
+                const acid = ACID_PRESETS[currentAcidKey];
+                const solid = SOLID_PRESETS[currentSolidKey];
+                const comboFactor = acid.rateFactor * solid.reactivityFactor;
+
+                // Dynamic exponential reaction rate & gas volume based on chosen chemicals & concentration
+                const k1 = 0.016 * comboFactor;
+                const k2 = 0.016 * comboFactor * Math.pow(concRatio, 0.75);
+                const cap1 = 70.3 * acid.maxVolFactor;
+                const cap2 = cap1 * (0.45 + 0.55 * concRatio);
+
+                vol1 = cap1 * (1 - Math.exp(-k1 * elapsedTime));
+                vol2 = cap2 * (1 - Math.exp(-k2 * elapsedTime));
+                recordSample();
+
+                // Instantaneous reaction rates (proportional to remaining reactant)
+                const rate1 = Math.min(1.4, Math.exp(-k1 * elapsedTime) * comboFactor);
+                const rate2 = Math.min(1.4, Math.exp(-k2 * elapsedTime) * comboFactor * concRatio);
+
+                // Spawn CO2 bubbles in Bottle 1 (More frequent)
+                if (Math.random() < 0.65 * rate1) {
+                    bubbles1.push({
+                        x: (Math.random() - 0.5) * 62,
+                        y: 0,
+                        offsetY: 6,
+                        r: Math.random() * 2.5 + 1.5,
+                        vy: Math.random() * 1.5 + 1.2
                     });
                 }
 
-                ctx.restore();
-            }
-
-            // រង្វិលជុំគំនូរ និងចលនា (Animation Loop)
-            function updateAndDraw(now) {
-                const dt = Math.min(0.05, (now - lastTime) / 1000);
-                lastTime = now;
-                animClock += dt;
-
-                const w = canvas.clientWidth;
-                const h = canvas.clientHeight;
-                ctx.clearRect(0, 0, w, h);
-
-                if (currentTab === 1) {
-                    const s = samplesData[sampleSelect.value];
-                    const ind = indicatorSelect.value;
-                    const bw = 155, bh = 148;
-                    const bx = w * 0.5 - bw / 2;
-                    const by = h * 0.38;
-
-                    // កំណត់ពណ៌ក្រដាសមុនជ្រលក់
-                    if (!stripState.dipped) {
-                        stripState.baseColor = ind === 'ph' ? '#fef3c7' : (ind === 'litmus' ? '#3b82f6' : '#f59e0b');
-                    }
-
-                    drawGlassBeaker(bx, by, bw, bh, s.liquid, s.name);
-
-                    if (stripState.dipped) {
-                        // ចលនាជ្រលក់ចុះ រួចងើបឡើងវិញបន្តិច
-                        if (stripState.wetProgress < 1) {
-                            stripState.wetProgress = Math.min(1, stripState.wetProgress + dt * 1.4);
-                            stripState.dipOffset = Math.sin(stripState.wetProgress * Math.PI);
-                        } else {
-                            stripState.dipOffset = 0;
-                        }
-                    }
-
-                    drawIndicatorStrip(
-                        w * 0.5,
-                        by - 62,
-                        by + bh * 0.34,
-                        stripState.baseColor,
-                        stripState.activeColor,
-                        stripState.dipOffset,
-                        stripState.wetProgress,
-                        stripState.ph,
-                        stripState.dipped
-                    );
-
-                } else if (currentTab === 2) {
-                    const bw = 165, bh = 145;
-                    const bx = w * 0.5 - bw / 2;
-                    const by = h * 0.32;
-
-                    drawGlassBeaker(bx, by, bw, bh, exp2State.liquidColor, 'កែវសូលុយស្យុងអាស៊ីដ (HCl)');
-
-                    if (exp2State.active) {
-                        exp2State.dropProgress = Math.min(1, exp2State.dropProgress + dt * 2.2);
-                        const solidY = (by - 15) + exp2State.dropProgress * (bh - 15);
-
-                        // គូរដុំសារធាតុដែលទម្លាក់ចូល (លើកលែង NaOH ដែលជាសូលុយស្យុង)
-                        if (exp2State.reagent !== 'naoh') {
-                            ctx.save();
-                            ctx.fillStyle = exp2State.reagent === 'caco3' ? '#fef3c7' : (exp2State.reagent === 'cuo' ? '#1e293b' : '#cbd5e1');
-                            ctx.beginPath();
-                            ctx.roundRect(w * 0.5 - 16, solidY - 12, 32, 14, 4);
-                            ctx.fill();
-                            ctx.strokeStyle = 'rgba(255,255,255,0.5)';
-                            ctx.stroke();
-                            ctx.restore();
-                        }
-
-                        // បង្កើតពពុះឧស្ម័នសម្រាប់ Zn, Mg, CaCO3
-                        const hasGas = ['zn', 'mg', 'caco3'].includes(exp2State.reagent);
-                        if (hasGas && exp2State.dropProgress > 0.6 && Math.random() < (exp2State.reagent === 'mg' ? 0.55 : 0.35)) {
-                            exp2State.bubbles.push({
-                                x: bx + 32 + Math.random() * (bw - 64),
-                                y: by + bh - 18,
-                                r: 2 + Math.random() * 3,
-                                vy: 36 + Math.random() * 38
-                            });
-                        }
-
-                        for (let i = exp2State.bubbles.length - 1; i >= 0; i--) {
-                            const b = exp2State.bubbles[i];
-                            b.y -= b.vy * dt;
-                            ctx.beginPath();
-                            ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-                            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-                            ctx.fill();
-                            if (b.y < by + bh * 0.35) exp2State.bubbles.splice(i, 1);
-                        }
-                    }
-
-                    // បង្ហាញលទ្ធផល និងសមីការខាងក្រោមកែវ
-                    ctx.save();
-                    ctx.fillStyle = '#f8fafc';
-                    ctx.font = '700 13px "Kantumruy Pro", sans-serif';
-                    ctx.textAlign = 'center';
-                    ctx.fillText(exp2State.productText, w * 0.5, by + bh + 28);
-                    ctx.fillStyle = '#fde047';
-                    ctx.font = '600 12.5px monospace';
-                    ctx.fillText(exp2State.equationText, w * 0.5, by + bh + 48);
-                    ctx.restore();
-
-                } else {
-                    if (exp3State.mode === 'acid') {
-                        exp3State.ions.forEach(ion => {
-                            if (ion.type === 'H+') {
-                                // អ៊ីយ៉ុងវិជ្ជមាន H+ ផ្លាស់ទីទៅរកអេឡិចត្រូតអវិជ្ជមាន (-) ខាងឆ្វេង
-                                ion.x -= ion.speed * dt * 0.45;
-                                if (ion.x <= -0.78) ion.x = 0.78;
-                            } else {
-                                // អ៊ីយ៉ុងអវិជ្ជមាន Cl- ផ្លាស់ទីទៅរកអេឡិចត្រូតវិជ្ជមាន (+) ខាងស្តាំ
-                                ion.x += ion.speed * dt * 0.45;
-                                if (ion.x >= 0.78) ion.x = -0.78;
-                            }
-                        });
-                    }
-                    drawCircuitLab(w, h, exp3State.mode);
+                // Spawn CO2 bubbles in Bottle 2 (Less frequent)
+                if (Math.random() < 0.44 * rate2) {
+                    bubbles2.push({
+                        x: (Math.random() - 0.5) * 62,
+                        y: 0,
+                        offsetY: 6,
+                        r: Math.random() * 2.0 + 1.2,
+                        vy: Math.random() * 1.1 + 0.8
+                    });
                 }
 
-                requestAnimationFrame(updateAndDraw);
+                updateUIReadouts();
             }
 
-            window.addEventListener('resize', resizeCanvas);
-            resizeCanvas();
-            requestAnimationFrame(updateAndDraw);
+            // Animate bubbles upward inside liquid (equal height = 96px)
+            [bubbles1, bubbles2].forEach(list => {
+                for (let i = list.length - 1; i >= 0; i--) {
+                    list[i].offsetY += list[i].vy;
+                    if (list[i].offsetY > 92) {
+                        list.splice(i, 1);
+                    }
+                }
+            });
+        }
+
+        function drawMainLab() {
+            const dpr = window.devicePixelRatio || 1;
+            const w = labCanvas.width / dpr;
+            const h = labCanvas.height / dpr;
+            ctx.clearRect(0, 0, w, h);
+
+            // Lab Bench Surface positioned cleanly with room for multi-line labels below
+            const benchHeight = 96;
+            const yBase = h - benchHeight;
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fillRect(0, yBase, w, benchHeight);
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, yBase);
+            ctx.lineTo(w, yBase);
+            ctx.stroke();
+
+            // Map bubble offsetY to actual canvas Y
+            bubbles1.forEach(b => b.y = yBase - b.offsetY);
+            bubbles2.forEach(b => b.y = yBase - b.offsetY);
+
+            const x1 = w * 0.27;
+            const x2 = w * 0.73;
+            const colMaxW = Math.min(220, w * 0.42);
+            const acid = ACID_PRESETS[currentAcidKey];
+            const solid = SOLID_PRESETS[currentSolidKey];
+            const pct2 = Math.round(concRatio * 100);
+            const volAcid2 = (30 * concRatio).toFixed(1).replace(/\.0$/, '');
+            const volWater2 = (30 * (1 - concRatio)).toFixed(1).replace(/\.0$/, '');
+
+            // Draw Bottle 1 (Pure Acid - High Concentration)
+            drawApparatus(x1, yBase, {
+                title: `ដបទី១ A ៖ ${acid.shortLabel} សុទ្ធ (30 mL)`,
+                subtitle: `${solid.name} 3.0 g (មាឌសរុប 30 mL)`,
+                liquidColor: acid.highLiquid,
+                meniscusColor: acid.highMeniscus,
+                balloonColor: 'rgba(245, 158, 11, 0.85)',
+                balloonBorder: '#b45309',
+                badgeColor: '#b45309',
+                maxTextWidth: colMaxW,
+                volume: vol1,
+                bubbles: bubbles1,
+                grains: grains1
+            });
+
+            // Draw Bottle 2 (Diluted Acid - Lower Concentration)
+            drawApparatus(x2, yBase, {
+                title: `ដបទី២ B ៖ ${acid.shortLabel} ${volAcid2} mL + ទឹក ${volWater2} mL`,
+                subtitle: `${solid.name} 3.0 g (មាឌសរុប 30 mL)`,
+                liquidColor: acid.lowLiquid,
+                meniscusColor: acid.lowMeniscus,
+                balloonColor: 'rgba(14, 165, 233, 0.85)',
+                balloonBorder: '#0369a1',
+                badgeColor: '#0369a1',
+                maxTextWidth: colMaxW,
+                volume: vol2,
+                bubbles: bubbles2,
+                grains: grains2
+            });
+        }
+
+        // Draw Microscopic Collision Simulation
+        function drawMicroView(canvas, context, particles, solidColor) {
+            const w = canvas.width;
+            const h = canvas.height;
+            context.clearRect(0, 0, w, h);
+
+            const solid = SOLID_PRESETS[currentSolidKey];
+            const acid = ACID_PRESETS[currentAcidKey];
+
+            // Solid reactant wall at the bottom
+            const wallY = h - 18;
+            context.fillStyle = solid.wallColor;
+            context.fillRect(0, wallY, w, 18);
+            context.fillStyle = '#475569';
+            context.font = 'bold 10px sans-serif';
+            context.textAlign = 'center';
+            context.fillText(`${solid.name} (${solid.formula})`, w / 2, h - 5);
+
+            // Update & draw Acid particles
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 6 || p.x > w - 6) p.vx *= -1;
+                if (p.y < 6) p.vy *= -1;
+                if (p.y > wallY - 5) {
+                    p.vy *= -1;
+                    p.flash = 8; // Trigger collision flash!
+                }
+
+                // Draw collision flash ring
+                if (p.flash > 0) {
+                    context.strokeStyle = 'rgba(239, 68, 68, 0.8)';
+                    context.lineWidth = 2;
+                    context.beginPath();
+                    context.arc(p.x, p.y, 9 - p.flash * 0.5, 0, Math.PI * 2);
+                    context.stroke();
+                    p.flash--;
+                }
+
+                // Particle circle
+                context.fillStyle = acid.particleColor;
+                context.beginPath();
+                context.arc(p.x, p.y, 4, 0, Math.PI * 2);
+                context.fill();
+            });
+        }
+
+        // Main Animation Loop
+        let lastTimestamp = 0;
+        function animateLoop(timestamp) {
+            if (!lastTimestamp) lastTimestamp = timestamp;
+            const dt = Math.min(0.1, (timestamp - lastTimestamp) / 1000);
+            lastTimestamp = timestamp;
+
+            updateSimulation(dt);
+            drawMainLab();
+            drawMicroView(microCanvas1, mCtx1, microParticles1, '#cbd5e1');
+            drawMicroView(microCanvas2, mCtx2, microParticles2, '#cbd5e1');
+
+            requestAnimationFrame(animateLoop);
+        }
+
+        // Start App on Window Load
+        window.onload = function() {
+            resizeCanvases();
+            applyCustomConfig();
+            renderDataAnalysis();
+            requestAnimationFrame(animateLoop);
         };
     </script>
 </body>
